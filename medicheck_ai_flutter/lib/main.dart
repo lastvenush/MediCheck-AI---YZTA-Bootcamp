@@ -4,7 +4,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'features/home/home_screen.dart'; // Ana sayfamızı içeri aktarıyoruz
 
+import 'app.dart';
+
 void main() {
+<<<<<<< HEAD
   runApp(
     // Riverpod'u kullanabilmek için uygulamayı ProviderScope ile sarmak zorundayız.
     const ProviderScope(
@@ -47,4 +50,7 @@ class MediCheckApp extends StatelessWidget {
       routerConfig: router, 
     );
   }
+=======
+  runApp(const MediCheckApp());
+>>>>>>> 9d48b08bd1d6135bdfe7262e08386b71d23d6207
 }
