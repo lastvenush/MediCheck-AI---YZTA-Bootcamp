@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/theme/app_theme.dart';
-import '../../../catalog/domain/product.dart';
+import '../../../../models/product.dart';
 import '../../domain/ai_analysis_result.dart';
 import '../../domain/ai_analysis_service.dart';
 
@@ -47,93 +46,62 @@ class _AiAnalysisCardState extends State<AiAnalysisCard> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
+    return Container(
       key: const Key('ai-analysis-card'),
-      color: const Color(0xFFFBFDFC),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(24),
-        side: const BorderSide(color: Color(0xFFCFE2DF), width: 1.2),
+      width: double.infinity,
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.blue[50],
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.blue[200]!, width: 1.5),
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const _AnalysisHeader(),
-            const SizedBox(height: 18),
-            FutureBuilder<AiAnalysisResult>(
-              future: _analysis,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const _LoadingAnalysis();
-                }
-                if (snapshot.hasError || !snapshot.hasData) {
-                  return _ErrorAnalysis(onRetry: _retry);
-                }
-                return _AnalysisContent(result: snapshot.requireData);
-              },
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _AnalysisHeader extends StatelessWidget {
-  const _AnalysisHeader();
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          width: 42,
-          height: 42,
-          decoration: BoxDecoration(
-            color: AppColors.primarySoft,
-            borderRadius: BorderRadius.circular(13),
-          ),
-          child: const Icon(
-            Icons.auto_awesome_outlined,
-            color: AppColors.primaryDark,
-            size: 22,
-          ),
-        ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
             children: [
-              Text(
-                'MediCheck AI Analizi',
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
-              const SizedBox(height: 2),
-              Text(
-                'Yalnızca mevcut ürün verileri kullanılır',
-                style: Theme.of(context).textTheme.bodyMedium,
+              Icon(Icons.auto_awesome, color: Colors.blue[700], size: 27),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'MediCheck AI Analizi',
+                      style: TextStyle(
+                        color: Colors.blue[900],
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      'Yalnızca mevcut ürün verileri kullanılır',
+                      style: TextStyle(
+                        color: Colors.blueGrey[600],
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
-        ),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-          decoration: BoxDecoration(
-            color: AppColors.primarySoft,
-            borderRadius: BorderRadius.circular(9),
+          const SizedBox(height: 16),
+          FutureBuilder<AiAnalysisResult>(
+            future: _analysis,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const _LoadingAnalysis();
+              }
+              if (snapshot.hasError || !snapshot.hasData) {
+                return _ErrorAnalysis(onRetry: _retry);
+              }
+              return _AnalysisContent(result: snapshot.requireData);
+            },
           ),
-          child: const Text(
-            'Güvenli',
-            style: TextStyle(
-              color: AppColors.primaryDark,
-              fontSize: 11,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
@@ -145,24 +113,21 @@ class _LoadingAnalysis extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       key: const Key('ai-analysis-loading'),
-      height: 132,
+      height: 104,
       child: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             const SizedBox(
-              width: 26,
-              height: 26,
-              child: CircularProgressIndicator(
-                strokeWidth: 2.4,
-                color: AppColors.primary,
-              ),
+              width: 25,
+              height: 25,
+              child: CircularProgressIndicator(strokeWidth: 2.5),
             ),
-            const SizedBox(height: 14),
+            const SizedBox(height: 12),
             Text(
               'Ürün bilgileri güvenli kurallarla özetleniyor…',
               textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.bodyMedium,
+              style: TextStyle(color: Colors.blueGrey[700], fontSize: 13),
             ),
           ],
         ),
@@ -181,28 +146,16 @@ class _ErrorAnalysis extends StatelessWidget {
     return Container(
       key: const Key('ai-analysis-error'),
       width: double.infinity,
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.error.withValues(alpha: 0.06),
-        borderRadius: BorderRadius.circular(16),
+        color: Colors.red[50],
+        borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
         children: [
-          Icon(
-            Icons.cloud_off_outlined,
-            color: Theme.of(context).colorScheme.error,
-          ),
+          Icon(Icons.cloud_off_outlined, color: Colors.red[600]),
           const SizedBox(height: 8),
-          Text(
-            'Analiz şu anda görüntülenemiyor.',
-            style: Theme.of(context).textTheme.titleMedium,
-          ),
-          const SizedBox(height: 4),
-          Text(
-            'Ürün bilgileri ekranda kalmaya devam eder.',
-            style: Theme.of(context).textTheme.bodyMedium,
-          ),
-          const SizedBox(height: 10),
+          const Text('Analiz şu anda görüntülenemiyor.'),
           TextButton.icon(
             key: const Key('ai-analysis-retry'),
             onPressed: onRetry,
@@ -226,13 +179,20 @@ class _AnalysisContent extends StatelessWidget {
       key: const Key('ai-analysis-success'),
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(result.shortSummary, style: Theme.of(context).textTheme.bodyLarge),
+        Text(
+          result.shortSummary,
+          style: const TextStyle(
+            color: Colors.black87,
+            fontSize: 15,
+            height: 1.55,
+          ),
+        ),
         if (result.usagePurpose.isNotEmpty) ...[
-          const SizedBox(height: 18),
-          _AnalysisSection(
+          const SizedBox(height: 16),
+          _AnalysisTextSection(
             icon: Icons.my_location_outlined,
-            title: 'Ne amaçla kullanılır?',
-            body: result.usagePurpose,
+            title: 'Kullanım amacı',
+            text: result.usagePurpose,
           ),
         ],
         if (result.importantIngredients.isNotEmpty) ...[
@@ -259,20 +219,21 @@ class _AnalysisContent extends StatelessWidget {
             items: result.commonEffects,
           ),
         ],
-        const SizedBox(height: 20),
+        const SizedBox(height: 18),
         Container(
           width: double.infinity,
-          padding: const EdgeInsets.all(14),
+          padding: const EdgeInsets.all(13),
           decoration: BoxDecoration(
-            color: AppColors.warningSoft,
-            borderRadius: BorderRadius.circular(14),
+            color: Colors.amber[50],
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: Colors.amber[200]!),
           ),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Icon(
+              Icon(
                 Icons.info_outline_rounded,
-                color: AppColors.warning,
+                color: Colors.amber[800],
                 size: 19,
               ),
               const SizedBox(width: 9),
@@ -280,9 +241,10 @@ class _AnalysisContent extends StatelessWidget {
                 child: Text(
                   result.disclaimer,
                   key: const Key('ai-analysis-disclaimer'),
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: AppColors.warning,
+                  style: TextStyle(
+                    color: Colors.amber[900],
                     fontSize: 12.5,
+                    height: 1.45,
                   ),
                 ),
               ),
@@ -294,23 +256,30 @@ class _AnalysisContent extends StatelessWidget {
   }
 }
 
-class _AnalysisSection extends StatelessWidget {
-  const _AnalysisSection({
+class _AnalysisTextSection extends StatelessWidget {
+  const _AnalysisTextSection({
     required this.icon,
     required this.title,
-    required this.body,
+    required this.text,
   });
 
   final IconData icon;
   final String title;
-  final String body;
+  final String text;
 
   @override
   Widget build(BuildContext context) {
-    return _SectionShell(
+    return _AnalysisSectionShell(
       icon: icon,
       title: title,
-      child: Text(body, style: Theme.of(context).textTheme.bodyMedium),
+      child: Text(
+        text,
+        style: const TextStyle(
+          color: Colors.black87,
+          fontSize: 14,
+          height: 1.45,
+        ),
+      ),
     );
   }
 }
@@ -328,30 +297,35 @@ class _AnalysisListSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _SectionShell(
+    return _AnalysisSectionShell(
       icon: icon,
       title: title,
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: items
             .map(
               (item) => Padding(
-                padding: const EdgeInsets.only(bottom: 7),
+                padding: const EdgeInsets.only(bottom: 6),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Padding(
-                      padding: EdgeInsets.only(top: 7),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 7),
                       child: Icon(
                         Icons.circle,
                         size: 5,
-                        color: AppColors.primary,
+                        color: Colors.blue[700],
                       ),
                     ),
                     const SizedBox(width: 9),
                     Expanded(
                       child: Text(
                         item,
-                        style: Theme.of(context).textTheme.bodyMedium,
+                        style: const TextStyle(
+                          color: Colors.black87,
+                          fontSize: 14,
+                          height: 1.45,
+                        ),
                       ),
                     ),
                   ],
@@ -364,8 +338,8 @@ class _AnalysisListSection extends StatelessWidget {
   }
 }
 
-class _SectionShell extends StatelessWidget {
-  const _SectionShell({
+class _AnalysisSectionShell extends StatelessWidget {
+  const _AnalysisSectionShell({
     required this.icon,
     required this.title,
     required this.child,
@@ -382,12 +356,19 @@ class _SectionShell extends StatelessWidget {
       children: [
         Row(
           children: [
-            Icon(icon, color: AppColors.primary, size: 19),
+            Icon(icon, color: Colors.blue[700], size: 18),
             const SizedBox(width: 8),
-            Text(title, style: Theme.of(context).textTheme.titleMedium),
+            Text(
+              title,
+              style: TextStyle(
+                color: Colors.blue[900],
+                fontSize: 15,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
           ],
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: 7),
         child,
       ],
     );

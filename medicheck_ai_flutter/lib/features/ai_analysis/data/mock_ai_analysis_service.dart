@@ -1,4 +1,4 @@
-import '../../catalog/domain/product.dart';
+import '../../../models/product.dart';
 import '../domain/ai_analysis_result.dart';
 import '../domain/ai_analysis_service.dart';
 
@@ -13,29 +13,31 @@ class MockAiAnalysisService implements AiAnalysisService {
       await Future<void>.delayed(delay);
     }
 
-    return switch (product.type) {
-      ProductType.medicine => _analyzeMedicine(product),
-      ProductType.sunscreen => _analyzeSunscreen(product),
-    };
+    return product.isMedicine
+        ? _analyzeMedicine(product)
+        : _analyzeSunscreen(product);
   }
 
   AiAnalysisResult _analyzeMedicine(Product product) {
     return AiAnalysisResult(
       shortSummary: _fallbackText(
-        product.shortDescription,
+        product.description,
         '${_productName(product)} için sadeleştirilmiş ilaç bilgisi bulunamadı.',
       ),
       usagePurpose: _fallbackText(
-        product.usagePurpose,
+        product.description,
         'Kullanım amacı ürün verilerinde belirtilmemiştir.',
       ),
-      importantIngredients: _fallbackList(product.importantIngredients, const [
+      importantIngredients: _fallbackList(product.ingredients, const [
         'Etken madde bilgisi ürün verilerinde bulunmuyor.',
       ]),
-      attentionPoints: _fallbackList(product.attentionPoints, const [
-        'Kişisel sağlık durumu ve diğer ilaçlarla birlikte kullanım için doktor veya eczacıya danışılmalıdır.',
-      ]),
-      commonEffects: _fallbackList(product.commonEffects, const [
+      attentionPoints: _fallbackList(
+        _asSingleItem(product.contraindications),
+        const [
+          'Kişisel sağlık durumu ve diğer ilaçlarla birlikte kullanım için doktor veya eczacıya danışılmalıdır.',
+        ],
+      ),
+      commonEffects: _fallbackList(_splitItems(product.sideEffects), const [
         'Yaygın etki bilgisi ürün verilerinde bulunmuyor.',
       ]),
       disclaimer:
@@ -44,44 +46,40 @@ class MockAiAnalysisService implements AiAnalysisService {
   }
 
   AiAnalysisResult _analyzeSunscreen(Product product) {
-    final attributes = <String>[
-      if (product.spf != null) 'SPF ${product.spf}+ koruma bilgisi',
-      if (_hasText(product.filterType)) product.filterType!.trim(),
-      ...product.importantIngredients,
+    final searchableText = '${product.name} ${product.description}';
+    final spf = RegExp(
+      r'SPF\s*\d+\+?',
+      caseSensitive: false,
+    ).firstMatch(searchableText)?.group(0);
+
+    final importantIngredients = <String>[
+      if (spf != null) spf.toUpperCase(),
+      ...product.ingredients,
     ];
 
     final attentionPoints = <String>[
-      if (_hasText(product.skinType))
-        'Hedef cilt tipi: ${product.skinType!.trim()}.',
-      if (product.containsAlcohol == true)
-        'Alkol içerdiği belirtilmiştir; çok hassas ciltlerde rahatsızlık oluşturabilir.',
-      if (product.containsAlcohol == false)
-        'Ürün verisinde alkol bulunmadığı belirtilmiştir.',
-      if (product.containsFragrance == true)
-        'Parfüm içerdiği belirtilmiştir; koku hassasiyeti olan kişiler dikkat etmelidir.',
-      if (product.containsFragrance == false)
-        'Ürün verisinde parfüm bulunmadığı belirtilmiştir.',
-      ...product.attentionPoints,
+      ..._splitItems(product.sideEffects),
+      ..._asSingleItem(product.contraindications),
     ];
 
     return AiAnalysisResult(
       shortSummary: _fallbackText(
-        product.shortDescription,
+        product.description,
         '${_productName(product)} için güneş koruyucu özeti bulunamadı.',
       ),
       usagePurpose: _fallbackText(
-        product.usagePurpose,
+        product.description,
         'Ürünün kullanım amacı verilerde belirtilmemiştir.',
       ),
-      importantIngredients: _fallbackList(attributes, const [
+      importantIngredients: _fallbackList(importantIngredients, const [
         'Filtre veya içerik bilgisi ürün verilerinde bulunmuyor.',
       ]),
       attentionPoints: _fallbackList(attentionPoints, const [
         'Cilt hassasiyeti kişiden kişiye değişebilir; rahatsızlık halinde kullanım bırakılmalıdır.',
       ]),
-      commonEffects: _fallbackList(product.commonEffects, const [
+      commonEffects: const [
         'Kişisel hassasiyete bağlı kızarıklık veya rahatsızlık oluşabilir.',
-      ]),
+      ],
       disclaimer:
           'Bu analiz genel ürün verilerine dayanır ve dermatolojik değerlendirme yerine geçmez. Cilt hassasiyeti kişiden kişiye değişebilir.',
     );
@@ -95,6 +93,19 @@ class MockAiAnalysisService implements AiAnalysisService {
     return value.trim().isEmpty ? fallback : value.trim();
   }
 
+  static List<String> _asSingleItem(String value) {
+    final cleanValue = value.trim();
+    return cleanValue.isEmpty ? const [] : [cleanValue];
+  }
+
+  static List<String> _splitItems(String value) {
+    return value
+        .split(RegExp(r'\s*[•,]\s*'))
+        .map((item) => item.trim())
+        .where((item) => item.isNotEmpty)
+        .toList(growable: false);
+  }
+
   static List<String> _fallbackList(
     List<String> values,
     List<String> fallback,
@@ -104,9 +115,5 @@ class MockAiAnalysisService implements AiAnalysisService {
         .where((value) => value.isNotEmpty)
         .toList(growable: false);
     return cleanValues.isEmpty ? fallback : cleanValues;
-  }
-
-  static bool _hasText(String? value) {
-    return value != null && value.trim().isNotEmpty;
   }
 }

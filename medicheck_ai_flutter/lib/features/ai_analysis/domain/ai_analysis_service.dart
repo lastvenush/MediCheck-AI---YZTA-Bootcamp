@@ -1,4 +1,4 @@
-import '../../catalog/domain/product.dart';
+import '../../../models/product.dart';
 import 'ai_analysis_result.dart';
 
 abstract interface class AiAnalysisService {
