@@ -492,13 +492,13 @@ Sprint 2 sonunda MediCheck AI, planlama aşamasından çıkarak çalışan bir F
 
 Aşağıdaki görseller Sprint 2 sonunda uygulamanın geldiği teknik demo durumunu göstermektedir.
 
-![Sprint 2 Ana Sayfa](./images/sprint2-home.png)
+![Sprint 2 Ana Sayfa](./images/sprint2-home.png.jpeg)
 
-![Sprint 2 Ürün Listeleme](./images/sprint2-product-list.png)
+![Sprint 2 Ürün Listeleme](./images/sprint2-product-list.png.jpeg)
 
-![Sprint 2 Ürün Detay](./images/sprint2-product-detail.png)
+![Sprint 2 Ürün Detay](./images/sprint2-product-detail.png.jpeg)
 
-![Sprint 2 AI Analiz](./images/sprint2-ai-analysis.png)
+![Sprint 2 AI Analiz](./images/sprint2-ai-analysis.png.jpeg)
 
 ### Henüz Tamamlanmayan / Sprint 3’e Taşınan Ürün Çıktıları
 
