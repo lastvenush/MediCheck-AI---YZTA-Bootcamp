@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../models/product.dart';
 import '../../services/product_service.dart';
-import '../ai_analysis/data/mock_ai_analysis_service.dart';
+import '../ai_analysis/data/remote_ai_analysis_service.dart';
 import '../ai_analysis/presentation/widgets/ai_analysis_card.dart';
 
 class ProductDetailScreen extends StatelessWidget {
@@ -45,6 +45,8 @@ class ProductDetailScreen extends StatelessWidget {
 
 class _ProductDetailContent extends StatelessWidget {
   const _ProductDetailContent({required this.product});
+
+  static final _aiAnalysisService = RemoteAiAnalysisService();
 
   final Product product;
 
@@ -117,7 +119,7 @@ class _ProductDetailContent extends StatelessWidget {
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Text(
-                'Marka / Üretici Firma: ${product.brand}',
+                'Marka / Üretici Firma: ${product.displayManufacturer}',
                 style: TextStyle(
                   color: Colors.blue[800],
                   fontSize: 13,
@@ -145,10 +147,7 @@ class _ProductDetailContent extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 24),
-            AiAnalysisCard(
-              product: product,
-              service: const MockAiAnalysisService(),
-            ),
+            AiAnalysisCard(product: product, service: _aiAnalysisService),
             const SizedBox(height: 32),
             Text(
               isIlac
@@ -187,7 +186,7 @@ class _ProductDetailContent extends StatelessWidget {
             Wrap(
               spacing: 8,
               runSpacing: 8,
-              children: product.ingredients
+              children: product.primaryIngredients
                   .map(
                     (ingredient) => Chip(
                       label: Text(ingredient),
@@ -201,6 +200,35 @@ class _ProductDetailContent extends StatelessWidget {
                   )
                   .toList(growable: false),
             ),
+            if (product.sources.isNotEmpty) ...[
+              const SizedBox(height: 32),
+              const Text(
+                'Bilgi Kaynakları',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                product.lastReviewedAt.isEmpty
+                    ? 'İnceleme tarihi belirtilmemiştir.'
+                    : 'Son içerik incelemesi: ${product.lastReviewedAt}',
+                style: TextStyle(color: Colors.grey[700], fontSize: 13),
+              ),
+              const SizedBox(height: 8),
+              ...product.sources.map(
+                (source) => Card(
+                  elevation: 0,
+                  color: Colors.blue[50],
+                  child: ListTile(
+                    leading: const Icon(Icons.description_outlined),
+                    title: Text(source.title),
+                    subtitle: SelectableText(
+                      source.url,
+                      style: const TextStyle(fontSize: 12),
+                    ),
+                  ),
+                ),
+              ),
+            ],
             const SizedBox(height: 40),
             Container(
               padding: const EdgeInsets.all(16),

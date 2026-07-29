@@ -34,13 +34,18 @@ class ProductCard extends StatelessWidget {
           padding: const EdgeInsets.only(top: 4),
           child: Text('${product.brand} • ${product.category}'),
         ),
-        trailing: product.isSafe
-            ? const Icon(Icons.check_circle, color: Colors.green)
-            : const Icon(
-                Icons.warning_amber_rounded,
-                color: Colors.amber,
-                size: 28,
-              ),
+        trailing: Tooltip(
+          message: product.hasReviewedSources
+              ? 'Kaynak bilgisi incelendi'
+              : 'Kaynak incelemesi bekleniyor',
+          child: Icon(
+            product.hasReviewedSources
+                ? Icons.fact_check_outlined
+                : Icons.info_outline,
+            color: product.hasReviewedSources ? Colors.blue : Colors.grey,
+            size: 28,
+          ),
+        ),
         onTap: () => context.push('/product/${product.id}'),
       ),
     );

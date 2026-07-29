@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import 'features/home/home_screen.dart';
 import 'features/home/product_detail_screen.dart';
+import 'features/product_comparison/presentation/product_comparison_screen.dart';
 
 void main() {
   runApp(const ProviderScope(child: MediCheckApp()));
@@ -17,6 +18,10 @@ class MediCheckApp extends StatelessWidget {
     final router = GoRouter(
       routes: [
         GoRoute(path: '/', builder: (context, state) => const HomeScreen()),
+        GoRoute(
+          path: '/compare',
+          builder: (context, state) => const ProductComparisonScreen(),
+        ),
         GoRoute(
           path: '/product/:id',
           builder: (context, state) {
