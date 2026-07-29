@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../models/product.dart';
 import '../../services/product_service.dart';
 import '../../shared/widgets/product_card.dart';
+import '../ai_assistant/presentation/ai_assistant_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -19,7 +20,6 @@ class _HomeScreenState extends State<HomeScreen> {
   List<Product> tumUrunler = [];
   bool yukleniyorMu = true;
 
-  
   List<Product> seciliUrunler = [];
 
   final List<String> gunesKremiFiltreleri = [
@@ -126,6 +126,14 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ],
         ),
+        actions: [
+          IconButton(
+            key: const Key('open-comparison'),
+            tooltip: 'Ürün karşılaştır',
+            onPressed: () => context.push('/compare'),
+            icon: const Icon(Icons.compare_arrows_rounded),
+          ),
+        ],
       ),
       body: yukleniyorMu
           ? const Center(child: CircularProgressIndicator())
@@ -334,10 +342,16 @@ class _HomeScreenState extends State<HomeScreen> {
                                             if (seciliUrunler.length < 2) {
                                               seciliUrunler.add(urun);
                                             } else {
-                                              ScaffoldMessenger.of(context).showSnackBar(
+                                              ScaffoldMessenger.of(
+                                                context,
+                                              ).showSnackBar(
                                                 const SnackBar(
-                                                  content: Text('Karşılaştırma için en fazla 2 ürün seçebilirsiniz.'),
-                                                  duration: Duration(seconds: 2),
+                                                  content: Text(
+                                                    'Karşılaştırma için en fazla 2 ürün seçebilirsiniz.',
+                                                  ),
+                                                  duration: Duration(
+                                                    seconds: 2,
+                                                  ),
                                                 ),
                                               );
                                             }
@@ -348,9 +362,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       },
                                     ),
                                   ),
-                                Expanded(
-                                  child: ProductCard(product: urun),
-                                ),
+                                Expanded(child: ProductCard(product: urun)),
                               ],
                             );
                           },
@@ -358,7 +370,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ],
             ),
-      
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: seciliUrunler.length == 2
           ? FloatingActionButton.extended(
@@ -369,7 +380,10 @@ class _HomeScreenState extends State<HomeScreen> {
               icon: const Icon(Icons.compare_arrows, color: Colors.white),
               label: const Text(
                 'Karşılaştır',
-                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             )
           : Container(
@@ -395,13 +409,17 @@ class _HomeScreenState extends State<HomeScreen> {
                   Navigator.push(
                     context,
                     MaterialPageRoute<void>(
-                      builder: (context) => const AiBotScreen(),
+                      builder: (context) => const AiAssistantScreen(),
                     ),
                   );
                 },
                 backgroundColor: Colors.transparent,
                 elevation: 0,
-                child: const Icon(Icons.auto_awesome, color: Colors.white, size: 32),
+                child: const Icon(
+                  Icons.auto_awesome,
+                  color: Colors.white,
+                  size: 32,
+                ),
               ),
             ),
     );
@@ -486,7 +504,8 @@ class _AiBotScreenState extends State<AiBotScreen> {
     super.initState();
     _messages.add({
       'sender': 'ai',
-      'text': 'Merhaba! Ben MediCheck AI. Dermokozmetik ve ilaç içerikleri hakkında size bilgi verebilirim. Ancak tıbbi tanı koyamam veya doz öneremem. Size nasıl yardımcı olabilirim?',
+      'text':
+          'Merhaba! Ben MediCheck AI. Dermokozmetik ve ilaç içerikleri hakkında size bilgi verebilirim. Ancak tıbbi tanı koyamam veya doz öneremem. Size nasıl yardımcı olabilirim?',
     });
   }
 
@@ -506,7 +525,8 @@ class _AiBotScreenState extends State<AiBotScreen> {
         _isTyping = false;
         _messages.add({
           'sender': 'ai',
-          'text': 'Bu bir demo yanıtıdır. Sistem şu anda güvenli modda çalışıyor. Sorduğunuz soruya dair ürün içeriklerini analiz edebilirim ancak sağlık durumunuzla ilgili kesin kararlar için lütfen bir doktora veya eczacıya danışın.'
+          'text':
+              'Bu bir demo yanıtıdır. Sistem şu anda güvenli modda çalışıyor. Sorduğunuz soruya dair ürün içeriklerini analiz edebilirim ancak sağlık durumunuzla ilgili kesin kararlar için lütfen bir doktora veya eczacıya danışın.',
         });
       });
     });
@@ -544,18 +564,27 @@ class _AiBotScreenState extends State<AiBotScreen> {
                 final msg = _messages[index];
                 final isUser = msg['sender'] == 'user';
                 return Align(
-                  alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
+                  alignment: isUser
+                      ? Alignment.centerRight
+                      : Alignment.centerLeft,
                   child: Container(
                     margin: const EdgeInsets.only(bottom: 12),
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 12,
+                    ),
                     constraints: BoxConstraints(
                       maxWidth: MediaQuery.of(context).size.width * 0.75,
                     ),
                     decoration: BoxDecoration(
                       color: isUser ? Colors.purple[600] : Colors.white,
                       borderRadius: BorderRadius.circular(16).copyWith(
-                        bottomRight: isUser ? const Radius.circular(0) : const Radius.circular(16),
-                        bottomLeft: !isUser ? const Radius.circular(0) : const Radius.circular(16),
+                        bottomRight: isUser
+                            ? const Radius.circular(0)
+                            : const Radius.circular(16),
+                        bottomLeft: !isUser
+                            ? const Radius.circular(0)
+                            : const Radius.circular(16),
                       ),
                       boxShadow: [
                         if (!isUser)
@@ -586,7 +615,10 @@ class _AiBotScreenState extends State<AiBotScreen> {
                 alignment: Alignment.centerLeft,
                 child: Text(
                   'AI Asistan yanıtlıyor...',
-                  style: TextStyle(color: Colors.grey[600], fontStyle: FontStyle.italic),
+                  style: TextStyle(
+                    color: Colors.grey[600],
+                    fontStyle: FontStyle.italic,
+                  ),
                 ),
               ),
             ),
@@ -616,7 +648,10 @@ class _AiBotScreenState extends State<AiBotScreen> {
                         ),
                         filled: true,
                         fillColor: Colors.grey[100],
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 10,
+                        ),
                       ),
                       onSubmitted: (_) => _sendMessage(),
                     ),
