@@ -15,5 +15,34 @@ void main() {
     expect(product.ingredients, ['Etken madde']);
     expect(product.isSafe, isFalse);
     expect(product.isMedicine, isTrue);
+    expect(product.sources, isEmpty);
+    expect(product.containsAlcohol, isNull);
+    expect(product.displayManufacturer, isEmpty);
+  });
+
+  test('Product.fromJson reads reviewed health data and sources', () {
+    final product = Product.fromJson({
+      'id': 'medicine',
+      'brand': 'Marka',
+      'manufacturer': 'Üretici',
+      'category': 'İlaç',
+      'ingredients': ['Eski alan'],
+      'activeIngredients': ['Etken madde 10 mg'],
+      'indications': ['Belirti tedavisi'],
+      'warnings': ['Doktora danışın.'],
+      'lastReviewedAt': '2026-07-29',
+      'sources': [
+        {'title': 'Resmî talimat', 'url': 'https://example.test/info.pdf'},
+        {'title': '', 'url': 'https://example.test/invalid.pdf'},
+      ],
+    });
+
+    expect(product.displayManufacturer, 'Üretici');
+    expect(product.primaryIngredients, ['Etken madde 10 mg']);
+    expect(product.indications, ['Belirti tedavisi']);
+    expect(product.warnings, ['Doktora danışın.']);
+    expect(product.sources, hasLength(1));
+    expect(product.sources.single.title, 'Resmî talimat');
+    expect(product.hasReviewedSources, isTrue);
   });
 }

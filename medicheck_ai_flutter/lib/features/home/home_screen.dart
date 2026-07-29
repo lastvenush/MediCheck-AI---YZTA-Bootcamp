@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../models/product.dart';
 import '../../services/product_service.dart';
 import '../../shared/widgets/product_card.dart';
+import '../ai_assistant/presentation/ai_assistant_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -122,6 +124,14 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ],
         ),
+        actions: [
+          IconButton(
+            key: const Key('open-comparison'),
+            tooltip: 'Ürün karşılaştır',
+            onPressed: () => context.push('/compare'),
+            icon: const Icon(Icons.compare_arrows_rounded),
+          ),
+        ],
       ),
       body: yukleniyorMu
           ? const Center(child: CircularProgressIndicator())
@@ -365,7 +375,7 @@ class _HomeScreenState extends State<HomeScreen> {
             Navigator.push(
               context,
               MaterialPageRoute<void>(
-                builder: (context) => const AiBotScreen(),
+                builder: (context) => const AiAssistantScreen(),
               ),
             );
           },
@@ -463,51 +473,6 @@ class _HomeScreenState extends State<HomeScreen> {
             colors: [Colors.red[500]!, Colors.white],
             stops: const [0.5, 0.5],
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class AiBotScreen extends StatelessWidget {
-  const AiBotScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        iconTheme: IconThemeData(color: Colors.purple[900]),
-        title: Text(
-          'MediCheck Asistan',
-          style: TextStyle(
-            color: Colors.purple[900],
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.smart_toy_rounded, size: 80, color: Colors.purple[300]),
-            const SizedBox(height: 24),
-            Text(
-              'Yapay Zeka Altyapısı Hazırlanıyor...',
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.grey[700],
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            const SizedBox(height: 12),
-            Text(
-              'Çok yakında sağlık asistanınız burada olacak.',
-              style: TextStyle(color: Colors.grey[500]),
-            ),
-          ],
         ),
       ),
     );

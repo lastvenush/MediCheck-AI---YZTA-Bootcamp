@@ -1,6 +1,7 @@
 import '../../../models/product.dart';
 import '../domain/ai_analysis_result.dart';
 import '../domain/ai_analysis_service.dart';
+import '../domain/ai_safety_guard.dart';
 
 class MockAiAnalysisService implements AiAnalysisService {
   const MockAiAnalysisService({this.delay = const Duration(milliseconds: 650)});
@@ -21,18 +22,25 @@ class MockAiAnalysisService implements AiAnalysisService {
   AiAnalysisResult _analyzeMedicine(Product product) {
     return AiAnalysisResult(
       shortSummary: _fallbackText(
-        product.description,
+        AiSafetyGuard.safeProductText(product.description, fallback: ''),
         '${_productName(product)} için sadeleştirilmiş ilaç bilgisi bulunamadı.',
       ),
       usagePurpose: _fallbackText(
-        product.description,
+        product.indications.join(' • '),
         'Kullanım amacı ürün verilerinde belirtilmemiştir.',
       ),
-      importantIngredients: _fallbackList(product.ingredients, const [
+      importantIngredients: _fallbackList(product.primaryIngredients, const [
         'Etken madde bilgisi ürün verilerinde bulunmuyor.',
       ]),
       attentionPoints: _fallbackList(
-        _asSingleItem(product.contraindications),
+        product.warnings.isNotEmpty
+            ? product.warnings
+            : _asSingleItem(
+                AiSafetyGuard.safeProductText(
+                  product.contraindications,
+                  fallback: '',
+                ),
+              ),
         const [
           'Kişisel sağlık durumu ve diğer ilaçlarla birlikte kullanım için doktor veya eczacıya danışılmalıdır.',
         ],
@@ -40,8 +48,7 @@ class MockAiAnalysisService implements AiAnalysisService {
       commonEffects: _fallbackList(_splitItems(product.sideEffects), const [
         'Yaygın etki bilgisi ürün verilerinde bulunmuyor.',
       ]),
-      disclaimer:
-          'Bu analiz yalnızca mevcut ürün verilerini sadeleştirir; tanı, tedavi veya doz önerisi değildir. İlaç kullanımına ilişkin kararlar için doktorunuza veya eczacınıza danışın.',
+      disclaimer: AiSafetyGuard.medicineDisclaimer,
     );
   }
 
@@ -54,7 +61,7 @@ class MockAiAnalysisService implements AiAnalysisService {
 
     final importantIngredients = <String>[
       if (spf != null) spf.toUpperCase(),
-      ...product.ingredients,
+      ...product.primaryIngredients,
     ];
 
     final attentionPoints = <String>[
@@ -64,11 +71,11 @@ class MockAiAnalysisService implements AiAnalysisService {
 
     return AiAnalysisResult(
       shortSummary: _fallbackText(
-        product.description,
+        AiSafetyGuard.safeProductText(product.description, fallback: ''),
         '${_productName(product)} için güneş koruyucu özeti bulunamadı.',
       ),
       usagePurpose: _fallbackText(
-        product.description,
+        AiSafetyGuard.safeProductText(product.usageInstructions, fallback: ''),
         'Ürünün kullanım amacı verilerde belirtilmemiştir.',
       ),
       importantIngredients: _fallbackList(importantIngredients, const [
@@ -80,8 +87,7 @@ class MockAiAnalysisService implements AiAnalysisService {
       commonEffects: const [
         'Kişisel hassasiyete bağlı kızarıklık veya rahatsızlık oluşabilir.',
       ],
-      disclaimer:
-          'Bu analiz genel ürün verilerine dayanır ve dermatolojik değerlendirme yerine geçmez. Cilt hassasiyeti kişiden kişiye değişebilir.',
+      disclaimer: AiSafetyGuard.cosmeticDisclaimer,
     );
   }
 

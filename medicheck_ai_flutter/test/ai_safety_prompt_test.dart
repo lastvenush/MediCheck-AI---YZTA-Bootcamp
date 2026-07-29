@@ -8,5 +8,8 @@ void main() {
     expect(AiSafetyPrompt.systemPrompt, contains('doktor veya eczacı'));
     expect(AiSafetyPrompt.systemPrompt, contains('"shortSummary"'));
     expect(AiSafetyPrompt.systemPrompt, contains('"disclaimer"'));
+    expect(AiSafetyPrompt.systemPrompt, contains('Kesin güvenlik'));
+    expect(AiSafetyPrompt.assistantPrompt, contains('kişiye özel'));
+    expect(AiSafetyPrompt.comparisonPrompt, contains('tarafsız'));
   });
 }
