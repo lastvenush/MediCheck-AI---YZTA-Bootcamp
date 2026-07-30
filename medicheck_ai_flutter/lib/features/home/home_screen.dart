@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../models/product.dart';
 import '../../services/product_service.dart';
@@ -17,6 +18,9 @@ class _HomeScreenState extends State<HomeScreen> {
   String seciliAltFiltre = '';
   List<Product> tumUrunler = [];
   bool yukleniyorMu = true;
+
+  
+  List<Product> seciliUrunler = [];
 
   final List<String> gunesKremiFiltreleri = [
     '☀️ SPF50+',
@@ -174,13 +178,6 @@ class _HomeScreenState extends State<HomeScreen> {
                               Icons.search,
                               color: Colors.blueAccent,
                             ),
-                            suffixIcon: IconButton(
-                              icon: const Icon(
-                                Icons.qr_code_scanner,
-                                color: Colors.blueGrey,
-                              ),
-                              onPressed: () {},
-                            ),
                             border: InputBorder.none,
                             contentPadding: const EdgeInsets.symmetric(
                               horizontal: 20,
@@ -231,19 +228,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         _buildPillIcon(),
                         Colors.red,
                         'İlaç',
-                      ),
-                      const SizedBox(width: 8),
-                      _buildCategoryChip(
-                        'Favoriler',
-                        Icon(
-                          Icons.star_rounded,
-                          size: 22,
-                          color: seciliKategori == 'Favoriler'
-                              ? Colors.orange[900]
-                              : Colors.orange[500],
-                        ),
-                        Colors.orange,
-                        'Favoriler',
                       ),
                     ],
                   ),
@@ -333,78 +317,93 @@ class _HomeScreenState extends State<HomeScreen> {
                           padding: const EdgeInsets.only(top: 8, bottom: 80),
                           itemCount: filtrelenmisUrunler.length,
                           itemBuilder: (context, index) {
-                            return ProductCard(
-                              product: filtrelenmisUrunler[index],
+                            final urun = filtrelenmisUrunler[index];
+                            final isSelected = seciliUrunler.contains(urun);
+
+                            return Row(
+                              children: [
+                                if (urun.category == 'Güneş Kremi')
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 8.0),
+                                    child: Checkbox(
+                                      value: isSelected,
+                                      activeColor: Colors.purple[700],
+                                      onChanged: (bool? secildiMi) {
+                                        setState(() {
+                                          if (secildiMi == true) {
+                                            if (seciliUrunler.length < 2) {
+                                              seciliUrunler.add(urun);
+                                            } else {
+                                              ScaffoldMessenger.of(context).showSnackBar(
+                                                const SnackBar(
+                                                  content: Text('Karşılaştırma için en fazla 2 ürün seçebilirsiniz.'),
+                                                  duration: Duration(seconds: 2),
+                                                ),
+                                              );
+                                            }
+                                          } else {
+                                            seciliUrunler.remove(urun);
+                                          }
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                Expanded(
+                                  child: ProductCard(product: urun),
+                                ),
+                              ],
                             );
                           },
                         ),
                 ),
               ],
             ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: Container(
-        height: 64,
-        width: 64,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          gradient: LinearGradient(
-            colors: [Colors.blue[400]!, Colors.purple[600]!],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.purple.withValues(alpha: 0.4),
-              blurRadius: 15,
-              offset: const Offset(0, 6),
+      
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: seciliUrunler.length == 2
+          ? FloatingActionButton.extended(
+              onPressed: () {
+                context.push('/compare', extra: seciliUrunler);
+              },
+              backgroundColor: Colors.purple[700],
+              icon: const Icon(Icons.compare_arrows, color: Colors.white),
+              label: const Text(
+                'Karşılaştır',
+                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              ),
+            )
+          : Container(
+              height: 64,
+              width: 64,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: LinearGradient(
+                  colors: [Colors.blue[400]!, Colors.purple[600]!],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.purple.withValues(alpha: 0.4),
+                    blurRadius: 15,
+                    offset: const Offset(0, 6),
+                  ),
+                ],
+              ),
+              child: FloatingActionButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute<void>(
+                      builder: (context) => const AiBotScreen(),
+                    ),
+                  );
+                },
+                backgroundColor: Colors.transparent,
+                elevation: 0,
+                child: const Icon(Icons.auto_awesome, color: Colors.white, size: 32),
+              ),
             ),
-          ],
-        ),
-        child: FloatingActionButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute<void>(
-                builder: (context) => const AiBotScreen(),
-              ),
-            );
-          },
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          child: const Icon(Icons.auto_awesome, color: Colors.white, size: 32),
-        ),
-      ),
-      bottomNavigationBar: BottomAppBar(
-        shape: const CircularNotchedRectangle(),
-        notchMargin: 10,
-        color: Colors.white,
-        elevation: 10,
-        child: SizedBox(
-          height: 60,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              IconButton(
-                icon: Icon(
-                  Icons.home_rounded,
-                  size: 30,
-                  color: Colors.blue[900],
-                ),
-                onPressed: () {},
-              ),
-              const SizedBox(width: 48),
-              IconButton(
-                icon: Icon(
-                  Icons.person_outline_rounded,
-                  size: 30,
-                  color: Colors.grey[400],
-                ),
-                onPressed: () {},
-              ),
-            ],
-          ),
-        ),
-      ),
     );
   }
 
@@ -469,46 +468,175 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-class AiBotScreen extends StatelessWidget {
+// Çalışan AI Asistan Ekranı (Chat UI)
+class AiBotScreen extends StatefulWidget {
   const AiBotScreen({super.key});
+
+  @override
+  State<AiBotScreen> createState() => _AiBotScreenState();
+}
+
+class _AiBotScreenState extends State<AiBotScreen> {
+  final TextEditingController _controller = TextEditingController();
+  final List<Map<String, String>> _messages = [];
+  bool _isTyping = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _messages.add({
+      'sender': 'ai',
+      'text': 'Merhaba! Ben MediCheck AI. Dermokozmetik ve ilaç içerikleri hakkında size bilgi verebilirim. Ancak tıbbi tanı koyamam veya doz öneremem. Size nasıl yardımcı olabilirim?',
+    });
+  }
+
+  void _sendMessage() {
+    if (_controller.text.trim().isEmpty) return;
+
+    final userText = _controller.text.trim();
+    setState(() {
+      _messages.add({'sender': 'user', 'text': userText});
+      _isTyping = true;
+      _controller.clear();
+    });
+
+    Future.delayed(const Duration(seconds: 2), () {
+      if (!mounted) return;
+      setState(() {
+        _isTyping = false;
+        _messages.add({
+          'sender': 'ai',
+          'text': 'Bu bir demo yanıtıdır. Sistem şu anda güvenli modda çalışıyor. Sorduğunuz soruya dair ürün içeriklerini analiz edebilirim ancak sağlık durumunuzla ilgili kesin kararlar için lütfen bir doktora veya eczacıya danışın.'
+        });
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.grey[100],
       appBar: AppBar(
         backgroundColor: Colors.white,
-        elevation: 0,
+        elevation: 1,
         iconTheme: IconThemeData(color: Colors.purple[900]),
-        title: Text(
-          'MediCheck Asistan',
-          style: TextStyle(
-            color: Colors.purple[900],
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+        title: Row(
           children: [
-            Icon(Icons.smart_toy_rounded, size: 80, color: Colors.purple[300]),
-            const SizedBox(height: 24),
+            Icon(Icons.auto_awesome, color: Colors.purple[700]),
+            const SizedBox(width: 8),
             Text(
-              'Yapay Zeka Altyapısı Hazırlanıyor...',
+              'MediCheck Asistan',
               style: TextStyle(
-                fontSize: 18,
-                color: Colors.grey[700],
-                fontWeight: FontWeight.w600,
+                color: Colors.purple[900],
+                fontWeight: FontWeight.bold,
               ),
-            ),
-            const SizedBox(height: 12),
-            Text(
-              'Çok yakında sağlık asistanınız burada olacak.',
-              style: TextStyle(color: Colors.grey[500]),
             ),
           ],
         ),
+      ),
+      body: Column(
+        children: [
+          Expanded(
+            child: ListView.builder(
+              padding: const EdgeInsets.all(16),
+              itemCount: _messages.length,
+              itemBuilder: (context, index) {
+                final msg = _messages[index];
+                final isUser = msg['sender'] == 'user';
+                return Align(
+                  alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
+                  child: Container(
+                    margin: const EdgeInsets.only(bottom: 12),
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    constraints: BoxConstraints(
+                      maxWidth: MediaQuery.of(context).size.width * 0.75,
+                    ),
+                    decoration: BoxDecoration(
+                      color: isUser ? Colors.purple[600] : Colors.white,
+                      borderRadius: BorderRadius.circular(16).copyWith(
+                        bottomRight: isUser ? const Radius.circular(0) : const Radius.circular(16),
+                        bottomLeft: !isUser ? const Radius.circular(0) : const Radius.circular(16),
+                      ),
+                      boxShadow: [
+                        if (!isUser)
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.05),
+                            blurRadius: 5,
+                            offset: const Offset(0, 2),
+                          ),
+                      ],
+                    ),
+                    child: Text(
+                      msg['text']!,
+                      style: TextStyle(
+                        color: isUser ? Colors.white : Colors.black87,
+                        fontSize: 15,
+                        height: 1.4,
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+          if (_isTyping)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'AI Asistan yanıtlıyor...',
+                  style: TextStyle(color: Colors.grey[600], fontStyle: FontStyle.italic),
+                ),
+              ),
+            ),
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.05),
+                  offset: const Offset(0, -2),
+                  blurRadius: 10,
+                ),
+              ],
+            ),
+            child: SafeArea(
+              child: Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: _controller,
+                      decoration: InputDecoration(
+                        hintText: 'Merak ettiğiniz bir şey sorun...',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(24),
+                          borderSide: BorderSide.none,
+                        ),
+                        filled: true,
+                        fillColor: Colors.grey[100],
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                      ),
+                      onSubmitted: (_) => _sendMessage(),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.purple[600],
+                      shape: BoxShape.circle,
+                    ),
+                    child: IconButton(
+                      icon: const Icon(Icons.send_rounded, color: Colors.white),
+                      onPressed: _sendMessage,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
