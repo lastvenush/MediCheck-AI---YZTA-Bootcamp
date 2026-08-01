@@ -6,15 +6,35 @@ import '../../services/product_service.dart';
 import '../ai_analysis/data/remote_ai_analysis_service.dart';
 import '../ai_analysis/presentation/widgets/ai_analysis_card.dart';
 
-class ProductDetailScreen extends StatelessWidget {
+class ProductDetailScreen extends StatefulWidget {
   const ProductDetailScreen({required this.productId, super.key});
 
   final String productId;
 
   @override
+  State<ProductDetailScreen> createState() => _ProductDetailScreenState();
+}
+
+class _ProductDetailScreenState extends State<ProductDetailScreen> {
+  late Future<List<Product>> _productsFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _productsFuture = ProductService.loadProducts();
+  }
+
+  void _retry() {
+    ProductService.clearCache();
+    setState(() {
+      _productsFuture = ProductService.loadProducts();
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Product>>(
-      future: ProductService.loadProducts(),
+      future: _productsFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Scaffold(
@@ -22,13 +42,37 @@ class ProductDetailScreen extends StatelessWidget {
           );
         }
 
-        if (snapshot.hasError || !snapshot.hasData || snapshot.data!.isEmpty) {
-          return const Scaffold(body: Center(child: Text('Ürün bulunamadı.')));
+        if (snapshot.hasError) {
+          return Scaffold(
+            appBar: AppBar(title: const Text('Ürün detayı')),
+            body: Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(Icons.error_outline, size: 48),
+                  const SizedBox(height: 12),
+                  const Text('Ürün bilgileri yüklenemedi.'),
+                  const SizedBox(height: 12),
+                  FilledButton.icon(
+                    onPressed: _retry,
+                    icon: const Icon(Icons.refresh),
+                    label: const Text('Yeniden dene'),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }
+
+        if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          return const Scaffold(
+            body: Center(child: Text('Henüz katalog verisi bulunmuyor.')),
+          );
         }
 
         Product? product;
         for (final item in snapshot.data!) {
-          if (item.id == productId) {
+          if (item.id == widget.productId) {
             product = item;
             break;
           }

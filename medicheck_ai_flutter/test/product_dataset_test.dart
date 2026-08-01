@@ -7,7 +7,7 @@ void main() {
   test(
     'medicine demo dataset has five reviewed and sourced products',
     () async {
-      final products = await ProductService.loadProducts();
+      final products = await ProductService.loadProducts(useRemote: false);
       final medicines = products
           .where((product) => product.isMedicine)
           .toList();
@@ -30,7 +30,7 @@ void main() {
   test(
     'sunscreen dataset has ten reviewed products and comparison fields',
     () async {
-      final products = await ProductService.loadProducts();
+      final products = await ProductService.loadProducts(useRemote: false);
       final sunscreens = products
           .where((product) => product.isSunscreen)
           .toList();
