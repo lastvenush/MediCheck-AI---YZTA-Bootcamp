@@ -11,7 +11,7 @@ Uygulama teshis, tedavi, recete veya doz onerisi vermemelidir. Ilac kararlarinda
 ## Repository Yapisi
 
 - `README.md`: Sprint 1 ve Sprint 2 sureci, backlog, kullanici hikayeleri ve QA notlari.
-- `MediCheck_AI_Sprint_3_Kesin_Teknik_Plan_Gorev_Dagilimi.pdf`: Sprint 3 kapsam, mimari, gorev dagilimi ve teslim plani. Dosya 29 Temmuz 2026 tarihinde incelendiginde Git tarafindan izlenmiyordu.
+- `MediCheck_AI_Sprint_3_Kesin_Teknik_Plan_Gorev_Dagilimi.pdf`: Sprint 3 kapsam, mimari, gorev dagilimi ve teslim plani.
 - `images/`: Sprint board ve Sprint 2 uygulama ekran goruntuleri.
 - `medicheck_ai_flutter/`: Flutter uygulamasi.
 - `medicheck_ai_flutter/assets/data/products.json`: Yerel demo urun verisi.
@@ -19,8 +19,10 @@ Uygulama teshis, tedavi, recete veya doz onerisi vermemelidir. Ilac kararlarinda
 - `backend/app/ai/`: Gemini structured output, guvenlik dogrulamasi ve mock fallback servis katmani.
 - `backend/app/main.py`: FastAPI uygulamasi, CORS ve AI endpointleri.
 - `backend/tests/`: Ag veya gercek API anahtari kullanmayan servis/API sozlesme testleri.
+- `backend/schema.sql`: PostgreSQL icin normalize urun, terim ve kaynak semasi.
 
-Repository'de FastAPI-Gemini entegrasyonu vardir; veritabani henuz yoktur.
+Repository'de FastAPI-Gemini entegrasyonu ve PostgreSQL semasi vardir; canli
+veritabani baglantisi P2 kapsamindadir.
 
 ## Mevcut Teknik Mimari
 
@@ -34,7 +36,9 @@ Ana dosyalar:
 
 - `medicheck_ai_flutter/lib/main.dart`: Uygulama girisi ve GoRouter rotalari.
 - `medicheck_ai_flutter/lib/models/product.dart`: Urun modeli ve guvenli JSON okuma yardimcilari.
-- `medicheck_ai_flutter/lib/services/product_service.dart`: Asset JSON dosyasini yukler; hatalarda bos liste dondurur.
+- `medicheck_ai_flutter/lib/services/product_service.dart`: FastAPI katalog
+  endpointlerini kullanir; ag hatasinda asset JSON'a duser, iki kaynak da
+  bozuksa acik hata uretir ve basarili sonucu bellek icinde cache'ler.
 - `medicheck_ai_flutter/lib/features/home/home_screen.dart`: Arama, kategori/alt filtre, urun listesi ve AI asistan gecisi.
 - `medicheck_ai_flutter/lib/features/ai_assistant/`: Uzak ve mock fallback asistan servisleri ile calisan ekran.
 - `medicheck_ai_flutter/lib/features/product_comparison/`: Uzak ve mock fallback tarafsiz karsilastirma servisleri.
@@ -47,17 +51,17 @@ Ana dosyalar:
 
 ## Mevcut Urun Davranisi
 
-- Veri seti 5 gunes kremi ve kaynakli 5 ilactan olusur.
-- Ana sayfa urun adina gore arama yapar.
-- Kategoriler `Tumu`, `Gunes Kremi`, `Ilac` ve `Favoriler` olarak gorunur.
+- Veri seti kaynakli 10 gunes kremi ve 5 ilactan olusur.
+- Ana sayfa ad, marka, uretici, icerik, etken madde ve filtre tipine gore arama yapar.
+- Kategoriler `Tumu`, `Gunes Kremi` ve `Ilac` olarak gorunur.
 - Alt filtreler, gorunen filtre etiketini urun metinlerinde basit substring olarak arar.
-- Detay ekrani urunleri yeniden asset dosyasindan yukleyip ID ile urunu bulur.
-- Urun resmi dogrudan harici URL'den `NetworkImage` ile yuklenir.
+- Detay ekrani cache'lenmis katalogdan ID ile urunu bulur; yukleme hatasinda retry sunar.
+- Harici urun gorsellerinde loading ve hata fallback'i vardir.
 - AI analiz karti FastAPI uzerinden Gemini'yi kullanir; ag/API hatasinda guvenli mock sonuc uretir.
 - AI asistan ekrani urun secimi, soru, loading, guvenli cevap, disclaimer ve ornek soru akislariyla calisir.
-- Favoriler, QR ve profil islevsel degildir.
 - Karsilastirma ekrani ana ekrandaki ikonla acilir; iki gunes kremi icin yapisal tablo ve AI yorum karti gosterir.
-- FastAPI ve gercek Gemini entegrasyonu vardir; PostgreSQL yoktur.
+- Katalog FastAPI'den yuklenir; sunucu erisilemezse yerel demo verisi ve gorunur uyari kullanilir.
+- FastAPI ve gercek Gemini entegrasyonu vardir; PostgreSQL semasi hazirdir.
 
 ## Paket ve Mimari Notlari
 
@@ -75,12 +79,12 @@ Ana dosyalar:
 
 ## Dogrulanmis Durum
 
-29 Temmuz 2026 tarihinde bagimliliklar cozuldukten sonra su kontroller basarili olmustur:
+1 Agustos 2026 tarihinde su kontroller basarili olmustur:
 
-- `flutter analyze --no-pub`: sorun bulunmadi.
-- `flutter test`: 25/25 test basarili.
-- `flutter build web --no-pub`: web build basarili.
-- `python3 -m unittest discover -s backend/tests -v`: 9/9 backend AI/API testi basarili.
+- `flutter analyze`: sorun bulunmadi.
+- `flutter test`: 27/27 test basarili.
+- `flutter build web`: web build basarili; Wasm dry run da basarili.
+- `python3 -m unittest discover -s backend/tests -v`: 14/14 backend AI/API testi basarili.
 - `python3 -m compileall -q backend/app`: basarili.
 - 29 Temmuz 2026 gercek `gemini-3.5-flash-lite` HTTP smoke testi basarili: `/health` ve `/ai/ask` 200 dondu, sonuc `source=gemini`; API anahtari ignored `backend/.env` icinde tutulur.
 
@@ -100,21 +104,20 @@ Mevcut test kapsami:
 - Bes ilaclik kaynakli asset veri seti.
 - Dio uzak analiz, asistan ve karsilastirma yanit eslemeleri.
 - FastAPI health, analiz, soru ve karsilastirma sozlesmeleri.
+- FastAPI urun/ilac liste ve detay endpointleri ile 404 sozlesmeleri.
+- FastAPI katalog ve yerel asset fallback davranisi.
 
 Eksik test alanlari:
 
-- Asset/`ProductService` hata nedenlerinin kullaniciya ayri ayri sunulmasi.
 - Ana sayfa arama ve kategori/alt filtre davranisi.
-- Favoriler bos durumu.
 - Routing ve urun detay ID bulunamama akisi.
-- Network image fallback.
 - Tam uygulama seviyesinde widget/integration testi.
 
 ## Bilinen Riskler ve Teknik Borclar
 
 ### Saglik ve veri guvenligi
 
-- Bes ilac kaydi resmî uretici dokumanlariyla kaynaklandirildi; gunes kremi kayitlarinin resmî kaynaklari henuz eklenmedi.
+- On gunes kremi ve bes ilac kaydi resmî urun/uretici sayfalariyla kaynaklandirildi.
 - `isSafe` geriye uyumluluk icin modelde kalir ancak arayuzde kullanilmaz; tum eski cagri noktalarindan tasindiktan sonra kaldirilmalidir.
 - Detay ekrani ham `usageInstructions` verisini gosterir; disclaimer tek basina kaynak ve klinik dogruluk sorununun yerine gecmez.
 - API anahtari yalnizca ignored `backend/.env` icindedir; Flutter istemcisine eklenmemelidir.
@@ -122,19 +125,12 @@ Eksik test alanlari:
 
 ### Islevsel sorunlar
 
-- `Favoriler` secildiginde bu kategoriye sahip urun olmadigindan liste bos kalir.
 - Bazi alt filtre etiketleri veri metniyle birebir uyusmadigi icin beklenmeyen bos sonuc verir.
-- QR ve profil butonlarinin `onPressed` govdeleri bostur.
-- Harici urun gorsellerinde loading/error fallback yoktur; URL'ler kirilabilir veya hotlink engeline takilabilir.
 - Android ana manifestinde `INTERNET` izni vardir. Yerel HTTP backend erisimi sadece debug/profile manifestlerinde aciktir; release backend HTTPS kullanmalidir.
-- `ProductService` tum hatalari sessizce bos listeye cevirir; yukleme hatasi ile gercek bos veri ayrilamaz.
-- Detay ekrani her acilista tum JSON dosyasini yeniden yukler.
 
 ### Repository ve urunlestirme
 
-- Kok dizinde `.gitignore` yoktur. Flutter alt projesindeki `.gitignore`, kokteki `.DS_Store` dosyasini kapsamaz.
-- Web manifest ve platform gorunen adlarinda hala `medicheck_ai_flutter`/varsayilan Flutter metinleri bulunur.
-- Harici urun verilerinin kaynaklari ve lisans/kullanim bilgileri belgelenmemistir.
+- Android application ID ve release imzalama yapisi henuz urunlestirilmemistir.
 - Uygulamada kimlik dogrulama, kalici kullanici verisi, telemetry veya hata raporlama yoktur.
 
 ## Sprint 3 Kesin Oncelikleri

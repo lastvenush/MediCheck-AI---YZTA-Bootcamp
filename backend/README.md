@@ -37,6 +37,19 @@ Varsayilan veri kaynagi:
 
 Bu sayede Flutter ve FastAPI ayni demo kayitlarini kullanir. Farkli bir dosya kullanmak icin repository kokune gore veya mutlak yol olarak `MEDICHECK_DATA_FILE` ortam degiskenini ayarlayin.
 
+## PostgreSQL semasi
+
+Kalici veri katmani icin tablo, iliski, dogrulama ve arama indeksleri
+`backend/schema.sql` dosyasinda tanimlidir. Bir PostgreSQL veritabanina uygulamak icin:
+
+```bash
+psql "$DATABASE_URL" -f backend/schema.sql
+```
+
+Mevcut Sprint 3 demo API'si kurulum zorunlulugu yaratmamak icin ortak JSON veri
+setini okumaya devam eder. Sema, sonraki repository/migration gecisinin veri
+sozlesmesidir; urun, icerik/etken madde ve kaynak kayitlarini normalize eder.
+
 ## Test
 
 Repository kokunde:
