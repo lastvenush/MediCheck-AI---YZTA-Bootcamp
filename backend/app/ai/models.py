@@ -76,6 +76,19 @@ class ProductContext(ApiModel):
         return [self.contraindications] if self.contraindications else []
 
 
+class ProductSource(ApiModel):
+    title: str
+    url: str
+
+
+class ProductRecord(ProductContext):
+    ai_analysis: str = ""
+    is_safe: bool = False
+    image_url: str = ""
+    sources: list[ProductSource] = Field(default_factory=list)
+    last_reviewed_at: str = ""
+
+
 class AiAnalysisPayload(ApiModel):
     short_summary: str
     usage_purpose: str

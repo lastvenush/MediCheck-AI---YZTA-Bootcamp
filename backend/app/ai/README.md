@@ -21,6 +21,7 @@ Bu klasor Pelin'in AI ve entegrasyon sorumlulugundaki servis katmanidir. FastAPI
 - `GEMINI_MODEL`: Varsayilan `gemini-3.5-flash-lite`; deploy ortami icin acikca ayarlanabilir.
 - `GEMINI_MAX_OUTPUT_TOKENS=512`: Kisa structured output icin cikti maliyetini ve gecikmeyi sinirlar.
 - `GEMINI_THINKING_LEVEL=minimal`: Gemini 3.5 Flash-Lite icin en dusuk dusunme seviyesini kullanir.
+- `MEDICHECK_DATA_FILE`: Demo veri dosyasinin yolu. Varsayilan olarak Flutter asset'indeki ortak 10 gunes kremi + 5 ilac verisi okunur.
 
 Maliyet/gecikme profili bilincli olarak kisa urun analizi icin ayarlanmistir: urun baglami alan bazinda sinirlanir, kullanici sorusu en fazla 1000 karakter olarak islenir, cikti 512 tokenla sinirlanir ve modelin dusunme seviyesi `minimal` tutulur. Yeni Gemini 3.5 modellerinde kullanimi kaldirilan `temperature`, `top_p` ve `top_k` parametreleri gonderilmez. Daha karmasik gelecek senaryolarda bu degerler ortam degiskeniyle kontrollu olarak artirilabilir.
 
@@ -29,6 +30,10 @@ Maliyet/gecikme profili bilincli olarak kisa urun analizi icin ayarlanmistir: ur
 `backend.app.main` icinde su endpointler hazirdir:
 
 - `GET /health`
+- `GET /products`
+- `GET /products/{id}`
+- `GET /medicines`
+- `GET /medicines/{id}`
 - `POST /ai/analyze`
 - `POST /ai/ask`
 - `POST /ai/compare-products`
