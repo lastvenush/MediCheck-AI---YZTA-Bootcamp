@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../models/product.dart';
 import '../../services/product_service.dart';
+import '../../shared/widgets/product_image.dart';
 import '../ai_analysis/data/remote_ai_analysis_service.dart';
 import '../ai_analysis/presentation/widgets/ai_analysis_card.dart';
 
@@ -265,10 +266,9 @@ class _ProductDetailContent extends StatelessWidget {
                         size: 72,
                         color: isIlac ? Colors.red[200] : Colors.amber[300],
                       )
-                    : Image.network(
-                        product.imageUrl,
+                    : buildProductImage(
+                        product: product,
                         fit: BoxFit.contain,
-
                         errorBuilder: (context, error, stackTrace) {
                           return Center(
                             child: Column(

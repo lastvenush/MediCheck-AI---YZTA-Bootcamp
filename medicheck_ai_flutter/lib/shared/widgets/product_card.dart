@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../models/product.dart';
+import 'product_image.dart';
 
 class ProductCard extends StatelessWidget {
   const ProductCard({required this.product, super.key});
@@ -25,12 +26,11 @@ class ProductCard extends StatelessWidget {
 
           child: product.imageUrl.isNotEmpty
               ? ClipOval(
-                  child: Image.network(
-                    product.imageUrl,
+                  child: buildProductImage(
+                    product: product,
                     width: 48,
                     height: 48,
                     fit: BoxFit.cover,
-
                     errorBuilder: (context, error, stackTrace) {
                       return Icon(
                         product.isMedicine ? Icons.medication : Icons.wb_sunny,

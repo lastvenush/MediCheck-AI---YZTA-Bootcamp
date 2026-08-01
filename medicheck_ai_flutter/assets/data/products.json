@@ -15,7 +15,7 @@
     "contraindications": "Parfümsüz olduğu belirtilen formüllerde de kişisel cilt hassasiyeti oluşabilir.",
     "aiAnalysis": "Kaynaklı demo özeti: Ürün SPF50+, kimyasal filtreli ve parfümsüz formül olarak tanımlanır. Kişisel cilt toleransı değişebilir.",
     "isSafe": true,
-    "imageUrl": "https://static.wixstatic.com/media/4619fc_d098206358404f8db1fb0678e582fc96~mv2.jpg/v1/fill/w_1000,h_1000,al_c,q_85,usm_0.66_1.00_0.01/4619fc_d098206358404f8db1fb0678e582fc96~mv2.jpg",
+    "imageUrl": "assets/images/products/laroche-anthelios-uvmune400.png",
     "sources": [{"title": "La Roche-Posay Anthelios UVMune 400 Invisible Fluid resmî ürün sayfası", "url": "https://africa.laroche-posay.com/en-za/anthelios/anthelios-uvmune/anthelios-uvmune-400-invisible-fluid-spf50-plus-non-perfumed"}],
     "lastReviewedAt": "2026-08-01"
   },
@@ -35,7 +35,7 @@
     "contraindications": "Akne eğilimli ciltlerde ürün tepkisi kişiden kişiye değişebilir; rahatsızlık halinde kullanım bırakılmalıdır.",
     "aiAnalysis": "MediCheck demo özeti: Mevcut veride kimyasal ve fiziksel filtre, su bazlı yapı ve parfümsüz formül bilgileri yer alır.",
     "isSafe": true,
-    "imageUrl": "https://static.ticimax.cloud/cdn-cgi/image/width=459,quality=85/3263/uploads/urunresimleri/buyuk/-a41f.jpg",
+    "imageUrl": "assets/images/products/bioderma-aquafluide.jpg",
     "sources": [{"title": "BIODERMA Photoderm Aquafluide SPF50+ resmî ürün sayfası", "url": "https://www.bioderma.fr/p/photoderm-aquafluide-spf50"}],
     "lastReviewedAt": "2026-08-01"
   },
@@ -55,7 +55,7 @@
     "contraindications": "Alkol içerdiği belirtilmiştir; kuru veya hassas ciltlerde kişisel tolerans değişebilir.",
     "aiAnalysis": "MediCheck demo özeti: Mevcut veride SPF50+, mat bitiş, kimyasal filtre ve alkol içeriği bilgileri yer alır.",
     "isSafe": true,
-    "imageUrl": "https://i5.walmartimages.com/asr/bc4415e2-0384-41bd-aca2-de732f6ec57e.264f648a0cfc1dac091e4dee5f7c6671.jpeg?odnWidth=1000&odnHeight=1000&odnBg=ffffff",
+    "imageUrl": "assets/images/products/eucerin-oil-control.jpg",
     "sources": [{"title": "Eucerin Sun Gel-Cream Oil Control Dry Touch SPF50+ resmî ürün sayfası", "url": "https://pharmacy.eucerin.com/eucerin%20relaunch/home/products/sun-protection/sun-gel-creme-dry-touch-spf-50plus"}],
     "lastReviewedAt": "2026-08-01"
   },
@@ -75,7 +75,7 @@
     "contraindications": "Kişisel cilt ve göz çevresi toleransı değişebilir; rahatsızlık halinde kullanım bırakılmalıdır.",
     "aiAnalysis": "MediCheck demo özeti: Mevcut veride SPF50+, kimyasal filtre, hafif renk ve cilt yaşlanması görünümüne yönelik destek bilgileri yer alır.",
     "isSafe": true,
-    "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRYHpakMFsBYsoBZe8yq6U2_6X966TSm3gVamRgNZSh7op5mihAYiWJDIY&s=10",
+    "imageUrl": "assets/images/products/vichy-uv-age-daily.jpg",
     "sources": [{"title": "Vichy Capital Soleil UV-Age Daily resmî ürün sayfası", "url": "https://www.vichy.com.tr/gunes/uv-age-daily-capital-soleil/p46448.aspx"}],
     "lastReviewedAt": "2026-08-01"
   },
@@ -95,7 +95,7 @@
     "contraindications": "Mineral filtreli ürünlerde de kişisel hassasiyet oluşabilir; kullanım deneyimi kişiden kişiye değişebilir.",
     "aiAnalysis": "Kaynaklı demo özeti: Ürün çinko oksit bazlı mineral filtre içerir. Doku ve cilt görünümü kişiden kişiye değişebilir; kişisel uygunluk kararı değildir.",
     "isSafe": true,
-    "imageUrl": "",
+    "imageUrl": "assets/images/products/avene-mineral-spf50.png",
     "sources": [{"title": "Avène Mineral Sunscreen Multi-Defense Fluid SPF50+ resmî ürün sayfası", "url": "https://www.aveneusa.com/sun-care/mineral-sunscreen-multi-defense-fluid-spf-50"}],
     "lastReviewedAt": "2026-08-01"
   },
@@ -115,7 +115,7 @@
     "contraindications": "Salisilik asit veya diğer bileşenlere karşı kişisel hassasiyet oluşabilir; rahatsızlık halinde kullanım bırakılmalıdır.",
     "aiAnalysis": "Kaynaklı demo özeti: Ürün SPF50+ ve yağlı/akne eğilimli ciltlere yönelik olarak tanımlanır. Bu bilgi kişisel uygunluk veya tedavi önerisi değildir.",
     "isSafe": true,
-    "imageUrl": "",
+    "imageUrl": "assets/images/products/vichy-uv-clear.png",
     "sources": [{"title": "Vichy Capital Soleil UV-Clear SPF50+ resmî ürün sayfası", "url": "https://www.vichy.com.tr/gunes/uv-clear-capital-soleil/p47134.aspx"}],
     "lastReviewedAt": "2026-08-01"
   },
@@ -135,7 +135,7 @@
     "contraindications": "Renkli formülün tonu ve kişisel cilt toleransı değişebilir; rahatsızlık halinde kullanım bırakılmalıdır.",
     "aiAnalysis": "Kaynaklı demo özeti: Ürün hassas ve kızarıklık eğilimli ciltlere yönelik renkli SPF50+ formül olarak tanımlanır. Kişisel uygunluk kararı değildir.",
     "isSafe": true,
-    "imageUrl": "",
+    "imageUrl": "assets/images/products/bioderma-photoderm-ar.jpg",
     "sources": [{"title": "BIODERMA Photoderm AR SPF50+ resmî ürün sayfası", "url": "https://www.bioderma.com.tr/urunlerimiz/photoderm/ar-spf50"}],
     "lastReviewedAt": "2026-08-01"
   },
@@ -155,7 +155,7 @@
     "contraindications": "Kişisel cilt toleransı değişebilir; gözle temastan kaçınılmalı ve rahatsızlık halinde kullanım bırakılmalıdır.",
     "aiAnalysis": "Kaynaklı demo özeti: Ürün leke eğilimli ciltlere yönelik SPF50+ güneş koruyucu olarak tanımlanır. Leke tedavisi veya kesin sonuç vaadi değildir.",
     "isSafe": true,
-    "imageUrl": "",
+    "imageUrl": "assets/images/products/bioderma-photoderm-spot.png",
     "sources": [{"title": "BIODERMA Photoderm Spot SPF50+ resmî ürün sayfası", "url": "https://www.bioderma.com.tr/urunlerimiz/photoderm/spot-spf-50"}],
     "lastReviewedAt": "2026-08-01"
   },
@@ -175,7 +175,7 @@
     "contraindications": "Kişisel cilt toleransı değişebilir; rahatsızlık halinde kullanım bırakılmalıdır.",
     "aiAnalysis": "Kaynaklı demo özeti: Ürün normal ve kuru ciltlere yönelik nemlendirici SPF50+ formül olarak tanımlanır. Kişisel uygunluk kararı değildir.",
     "isSafe": true,
-    "imageUrl": "",
+    "imageUrl": "assets/images/products/bioderma-photoderm-cream.jpg",
     "sources": [{"title": "BIODERMA Photoderm Cream SPF50+ resmî ürün sayfası", "url": "https://www.bioderma.com.tr/urunlerimiz/photoderm/cream-spf50"}],
     "lastReviewedAt": "2026-08-01"
   },
@@ -195,7 +195,7 @@
     "contraindications": "Parfüm veya diğer bileşenlere karşı kişisel hassasiyet oluşabilir; rahatsızlık halinde kullanım bırakılmalıdır.",
     "aiAnalysis": "Kaynaklı demo özeti: Ürün leke eğilimli normal ve kuru ciltlere yönelik SPF50+ formül olarak tanımlanır ve parfüm içerir. Kişisel uygunluk veya tedavi önerisi değildir.",
     "isSafe": true,
-    "imageUrl": "",
+    "imageUrl": "assets/images/products/bioderma-photoderm-spot-age.png",
     "sources": [{"title": "BIODERMA Photoderm Spot-Age SPF50+ resmî ürün sayfası", "url": "https://www.bioderma.com.tr/urunlerimiz/photoderm/spot-age-spf50"}],
     "lastReviewedAt": "2026-08-01"
   },
@@ -215,7 +215,7 @@
     "contraindications": "Salisilat alerjisi, ülser veya kanama riski, ağır böbrek-karaciğer-kalp yetmezliği ve bazı eş zamanlı tedavilerde kullanılmaması gerekebilir.",
     "aiAnalysis": "Kaynaklı demo özeti: Etken madde asetilsalisilik asittir. Kişisel uygunluk; yaş, hastalıklar ve kullanılan diğer ilaçlara göre sağlık profesyonelince değerlendirilmelidir. Bu özet doz önerisi değildir.",
     "isSafe": false,
-    "imageUrl": "",
+    "imageUrl": "assets/images/products/aspirin-500.png",
     "sources": [{"title": "Bayer Aspirin 500 mg resmî kullanma talimatı", "url": "https://www.bayer.com/sites/default/files/aspirin-pil.pdf"}],
     "lastReviewedAt": "2026-07-29"
   },
@@ -235,7 +235,7 @@
     "contraindications": "NSAİİ alerjisi, aktif veya tekrarlayan ülser/kanama, belirli organ yetmezlikleri ve gebeliğin bazı dönemleri dâhil çeşitli durumlarda kullanılmaması gerekebilir.",
     "aiAnalysis": "Kaynaklı demo özeti: Etken madde deksketoprofendir. NSAİİ grubuna özgü mide-bağırsak ve kardiyovasküler riskler nedeniyle kişisel uygunluk sağlık profesyonelince değerlendirilmelidir. Bu özet doz önerisi değildir.",
     "isSafe": false,
-    "imageUrl": "https://www.menarini.com.tr/content/dam/menarini-rollout/tr/tr_tr/assets/products/images/yeni-%C3%BCr%C3%BCn-g%C3%B6rselleri-2026/Arveles_25mg_Box_2023.jpg",
+    "imageUrl": "assets/images/products/arveles-25mg.jpg",
     "sources": [{"title": "Menarini ARVELES 25 mg Kısa Ürün Bilgisi", "url": "https://www.menarini.com.tr/content/dam/menarini-rollout/tr/tr_tr/assets/products/pdfs/arveles-25-mg-film-kapli-tablet.pdf"}],
     "lastReviewedAt": "2026-07-29"
   },
@@ -255,7 +255,7 @@
     "contraindications": "Parasetamol veya yardımcı maddelere alerjisi olanlar ile şiddetli karaciğer ya da böbrek yetmezliği bulunanlarda kullanılmamalıdır.",
     "aiAnalysis": "Kaynaklı demo özeti: Etken madde parasetamoldür. Başka parasetamol içeren ürünlerle birlikte kullanım doz aşımı riski oluşturabilir. Bu özet doz önerisi değildir.",
     "isSafe": false,
-    "imageUrl": "",
+    "imageUrl": "assets/images/products/parol-500.png",
     "sources": [{"title": "Atabay PAROL 500 mg resmî kullanma talimatı", "url": "https://www.atabay.com/wp-content/uploads/2022/02/PAROL-500-tablet-KT.pdf"}],
     "lastReviewedAt": "2026-07-29"
   },
@@ -275,7 +275,7 @@
     "contraindications": "Etken madde veya ilgili bileşiklere aşırı duyarlılık ile diyaliz gerektiren ağır böbrek yetmezliğinde kullanılmamalıdır.",
     "aiAnalysis": "Kaynaklı demo özeti: Etken madde setirizin dihidroklorürdür. Uyku hali görülebileceği ve kişisel risklerin değişebileceği dikkate alınmalıdır. Bu özet doz önerisi değildir.",
     "isSafe": false,
-    "imageUrl": "",
+    "imageUrl": "assets/images/products/zyrtec-10mg.png",
     "sources": [{"title": "UCB ZYRTEC 10 mg resmî kullanma talimatı", "url": "https://ucb.com.tr/sites/default/files/2024-05/zyrtec-fct-leaflet-04.05.2023.pdf"}],
     "lastReviewedAt": "2026-07-29"
   },
@@ -295,7 +295,7 @@
     "contraindications": "Etken madde alerjisi, dar açılı glokom, belirli idrar/bağırsak tıkanıklıkları, taşiaritmi, megakolon ve myasthenia gravis durumlarında kullanılmamalıdır.",
     "aiAnalysis": "Kaynaklı demo özeti: Etken madde hiyosin-N-butilbromürdür. Şiddetli veya eşlik eden alarm belirtileri bulunan karın ağrısı kendi kendine ilaçla yönetilmemelidir. Bu özet doz önerisi değildir.",
     "isSafe": false,
-    "imageUrl": "",
+    "imageUrl": "assets/images/products/buscopan-10mg.png",
     "sources": [{"title": "Opella BUSCOPAN 10 mg Kısa Ürün Bilgisi", "url": "https://www.opella.com/dam/jcr%3A42dbfcd5-b624-4319-a9c4-5e2f08898db3/KUB-Buscopan%20Kapl%C4%B1%20Tablet-Opella-22.04.2025.pdf"}],
     "lastReviewedAt": "2026-07-29"
   }

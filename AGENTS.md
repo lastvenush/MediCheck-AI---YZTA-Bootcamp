@@ -61,7 +61,8 @@ Ana dosyalar:
 - Alt filtreler veri alanlarina acik kurallarla eslenir; arayuzde yalnizca mevcut
   Sprint 3 veri setinde karsiligi olan filtreler gosterilir.
 - Detay ekrani cache'lenmis katalogdan ID ile urunu bulur; yukleme hatasinda retry sunar.
-- Harici urun gorsellerinde loading ve hata fallback'i vardir.
+- On bes urunun gorseli `assets/images/products/` altinda yerel olarak tutulur;
+  kart ve detay ekranlari asset/network ayrimini yapar ve hata fallback'i vardir.
 - AI analiz karti FastAPI uzerinden Gemini'yi kullanir; ag/API hatasinda guvenli mock sonuc uretir.
 - AI asistan ekrani urun secimi, soru, loading, guvenli cevap, disclaimer ve ornek soru akislariyla calisir.
 - Karsilastirma ekrani ana ekrandaki ikonla acilir; iki gunes kremi icin yapisal tablo ve AI yorum karti gosterir.
