@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../models/product.dart';
+import '../../services/product_filter.dart';
 import '../../services/product_service.dart';
 import '../../shared/widgets/product_card.dart';
 import '../ai_assistant/presentation/ai_assistant_screen.dart';
@@ -26,20 +27,17 @@ class _HomeScreenState extends State<HomeScreen> {
 
   final List<String> gunesKremiFiltreleri = [
     '☀️ SPF50+',
-    '💧 Suya Dayanıklı',
     '🌿 Parfümsüz',
     '👶 Hassas Cilt',
-    '✨ Mat Bitiş',
+    '✨ Yağlı Cilt',
+    '💧 Kuru Cilt',
     '🧴 Mineral Filtre',
   ];
 
   final List<String> ilacFiltreleri = [
-    '💊 Ağrı Kesici',
-    '🤧 Soğuk Algınlığı',
-    '🛡️ Vitamin',
-    '🩹 İlk Yardım',
-    '💧 Şurup',
-    '🌿 Bitkisel',
+    '💊 Ağrı / Ateş',
+    '🤧 Alerji',
+    '🩹 Spazm',
   ];
 
   @override
@@ -74,45 +72,16 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  bool _aramaylaEslesiyor(Product urun) {
-    final sorgu = aramaMetni.trim().toLowerCase();
-    if (sorgu.isEmpty) return true;
-    final aranabilirAlanlar = [
-      urun.name,
-      urun.brand,
-      urun.manufacturer,
-      urun.description,
-      ...urun.ingredients,
-      ...urun.activeIngredients,
-      ...urun.filterTypes,
-    ].join(' ').toLowerCase();
-    return aranabilirAlanlar.contains(sorgu);
-  }
-
   @override
   Widget build(BuildContext context) {
     final filtrelenmisUrunler = tumUrunler.where((urun) {
       final kategoriUyuyorMu =
           seciliKategori == 'Tümü' || urun.category == seciliKategori;
-      final aramaUyuyorMu = _aramaylaEslesiyor(urun);
-
-      var altFiltreUyuyorMu = true;
-      if (seciliAltFiltre.isNotEmpty) {
-        final filtreKelimesi = seciliAltFiltre
-            .split(' ')
-            .skip(1)
-            .join(' ')
-            .toLowerCase();
-        altFiltreUyuyorMu =
-            urun.name.toLowerCase().contains(filtreKelimesi) ||
-            urun.description.toLowerCase().contains(filtreKelimesi) ||
-            urun.ingredients.any(
-              (item) => item.toLowerCase().contains(filtreKelimesi),
-            ) ||
-            urun.usageInstructions.toLowerCase().contains(filtreKelimesi) ||
-            urun.sideEffects.toLowerCase().contains(filtreKelimesi) ||
-            urun.contraindications.toLowerCase().contains(filtreKelimesi);
-      }
+      final aramaUyuyorMu = ProductFilter.matchesQuery(urun, aramaMetni);
+      final altFiltreUyuyorMu = ProductFilter.matchesSubfilter(
+        urun,
+        seciliAltFiltre,
+      );
 
       return kategoriUyuyorMu && aramaUyuyorMu && altFiltreUyuyorMu;
     }).toList();

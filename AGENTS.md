@@ -54,7 +54,8 @@ Ana dosyalar:
 - Veri seti kaynakli 10 gunes kremi ve 5 ilactan olusur.
 - Ana sayfa ad, marka, uretici, icerik, etken madde ve filtre tipine gore arama yapar.
 - Kategoriler `Tumu`, `Gunes Kremi` ve `Ilac` olarak gorunur.
-- Alt filtreler, gorunen filtre etiketini urun metinlerinde basit substring olarak arar.
+- Alt filtreler veri alanlarina acik kurallarla eslenir; arayuzde yalnizca mevcut
+  Sprint 3 veri setinde karsiligi olan filtreler gosterilir.
 - Detay ekrani cache'lenmis katalogdan ID ile urunu bulur; yukleme hatasinda retry sunar.
 - Harici urun gorsellerinde loading ve hata fallback'i vardir.
 - AI analiz karti FastAPI uzerinden Gemini'yi kullanir; ag/API hatasinda guvenli mock sonuc uretir.
@@ -82,7 +83,7 @@ Ana dosyalar:
 1 Agustos 2026 tarihinde su kontroller basarili olmustur:
 
 - `flutter analyze`: sorun bulunmadi.
-- `flutter test`: 27/27 test basarili.
+- `flutter test`: 30/30 test basarili.
 - `flutter build web`: web build basarili; Wasm dry run da basarili.
 - `python3 -m unittest discover -s backend/tests -v`: 14/14 backend AI/API testi basarili.
 - `python3 -m compileall -q backend/app`: basarili.
@@ -109,7 +110,7 @@ Mevcut test kapsami:
 
 Eksik test alanlari:
 
-- Ana sayfa arama ve kategori/alt filtre davranisi.
+- Ana sayfa widget seviyesinde arama ve kategori/alt filtre etkilesimi.
 - Routing ve urun detay ID bulunamama akisi.
 - Tam uygulama seviyesinde widget/integration testi.
 
@@ -125,7 +126,6 @@ Eksik test alanlari:
 
 ### Islevsel sorunlar
 
-- Bazi alt filtre etiketleri veri metniyle birebir uyusmadigi icin beklenmeyen bos sonuc verir.
 - Android ana manifestinde `INTERNET` izni vardir. Yerel HTTP backend erisimi sadece debug/profile manifestlerinde aciktir; release backend HTTPS kullanmalidir.
 
 ### Repository ve urunlestirme
