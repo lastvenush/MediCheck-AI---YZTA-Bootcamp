@@ -306,7 +306,7 @@ class _AiComparisonCard extends StatelessWidget {
               ),
             ),
           ],
-          const SizedBox(height: 12),
+          const SizedBox(height: 12), 
           Text(
             result.disclaimer,
             style: TextStyle(color: Colors.grey[700], fontSize: 12.5),

@@ -24,8 +24,8 @@ class _HomeScreenState extends State<HomeScreen> {
   bool yukleniyorMu = true;
   String? yuklemeHatasi;
   bool yerelVeriKullaniliyor = false;
-
   List<Product> seciliUrunler = [];
+  final FocusNode _aramaFocusNode = FocusNode();
 
   final List<String> gunesKremiFiltreleri = [
     '☀️ SPF50+',
@@ -46,6 +46,12 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     _urunleriGetir();
+  }
+
+  @override
+  void dispose() {
+    _aramaFocusNode.dispose();
+    super.dispose();
   }
 
   Future<void> _urunleriGetir() async {
@@ -93,6 +99,8 @@ class _HomeScreenState extends State<HomeScreen> {
       backgroundColor: Colors.grey[50],
       appBar: AppBar(
         backgroundColor: Colors.grey[50],
+        scrolledUnderElevation: 0,
+        surfaceTintColor: Colors.transparent,
         elevation: 0,
         title: Row(
           children: [
@@ -132,7 +140,10 @@ class _HomeScreenState extends State<HomeScreen> {
           IconButton(
             key: const Key('open-comparison'),
             tooltip: 'Ürün karşılaştır',
-            onPressed: () => context.push('/compare'),
+            onPressed: () {
+              _aramaFocusNode.unfocus();
+              context.push('/compare');
+            },
             icon: const Icon(Icons.compare_arrows_rounded),
           ),
         ],
@@ -180,6 +191,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           ],
                         ),
                         child: TextField(
+                          focusNode: _aramaFocusNode,
+                          onTapOutside: (_) => _aramaFocusNode.unfocus(),
                           onChanged: (deger) {
                             setState(() => aramaMetni = deger);
                           },
@@ -356,6 +369,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         )
                       : ListView.builder(
+                          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
                           padding: const EdgeInsets.only(top: 8, bottom: 80),
                           itemCount: filtrelenmisUrunler.length,
                           itemBuilder: (context, index) {
@@ -364,7 +378,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                             return Row(
                               children: [
-                                if (urun.category == 'Güneş Kremi')
+                                if (seciliKategori == 'Güneş Kremi')
                                   Padding(
                                     padding: const EdgeInsets.only(left: 8.0),
                                     child: Checkbox(
@@ -408,6 +422,7 @@ class _HomeScreenState extends State<HomeScreen> {
       floatingActionButton: seciliUrunler.length == 2
           ? FloatingActionButton.extended(
               onPressed: () {
+                _aramaFocusNode.unfocus();
                 context.push('/compare', extra: seciliUrunler);
               },
               backgroundColor: Colors.purple[700],
@@ -440,6 +455,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               child: FloatingActionButton(
                 onPressed: () {
+                  _aramaFocusNode.unfocus();
                   Navigator.push(
                     context,
                     MaterialPageRoute<void>(
@@ -468,9 +484,11 @@ class _HomeScreenState extends State<HomeScreen> {
     final isSelected = seciliKategori == categoryName;
     return GestureDetector(
       onTap: () {
+        _aramaFocusNode.unfocus();
         setState(() {
           seciliKategori = categoryName;
           seciliAltFiltre = '';
+          seciliUrunler.clear();
         });
       },
       child: Container(
