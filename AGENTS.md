@@ -28,13 +28,16 @@ veritabani baglantisi P2 kapsamindadir.
 
 Temel akis:
 
-`ProviderScope -> MaterialApp.router -> HomeScreen -> ProductCard -> ProductDetailScreen -> RemoteAiAnalysisService -> FastAPI -> GeminiService`
+`ProviderScope -> MaterialApp.router -> DisclaimerScreen -> HomeScreen -> ProductCard -> ProductDetailScreen -> RemoteAiAnalysisService -> FastAPI -> GeminiService`
 
 Uzak servis basarisiz olursa Flutter tarafinda guvenlik kuralli mock servis kullanilir.
 
 Ana dosyalar:
 
 - `medicheck_ai_flutter/lib/main.dart`: Uygulama girisi ve GoRouter rotalari.
+- `medicheck_ai_flutter/lib/features/onboarding/disclaimer_screen.dart`: Uygulama
+  acilisinda tanı/tedavi/recete/doz sinirlarini ve doktor/eczaci uyarisini
+  gosteren bilgilendirme ekrani.
 - `medicheck_ai_flutter/lib/models/product.dart`: Urun modeli ve guvenli JSON okuma yardimcilari.
 - `medicheck_ai_flutter/lib/services/product_service.dart`: FastAPI katalog
   endpointlerini kullanir; ag hatasinda asset JSON'a duser, iki kaynak da
@@ -52,6 +55,7 @@ Ana dosyalar:
 ## Mevcut Urun Davranisi
 
 - Veri seti kaynakli 10 gunes kremi ve 5 ilactan olusur.
+- Kullanici katalogdan once tibbi bilgilendirme ekranini gorur ve devam eder.
 - Ana sayfa ad, marka, uretici, icerik, etken madde ve filtre tipine gore arama yapar.
 - Kategoriler `Tumu`, `Gunes Kremi` ve `Ilac` olarak gorunur.
 - Alt filtreler veri alanlarina acik kurallarla eslenir; arayuzde yalnizca mevcut
@@ -83,7 +87,7 @@ Ana dosyalar:
 1 Agustos 2026 tarihinde su kontroller basarili olmustur:
 
 - `flutter analyze`: sorun bulunmadi.
-- `flutter test`: 30/30 test basarili.
+- `flutter test`: 34/34 test basarili.
 - `flutter build web`: web build basarili; Wasm dry run da basarili.
 - `python3 -m unittest discover -s backend/tests -v`: 14/14 backend AI/API testi basarili.
 - `python3 -m compileall -q backend/app`: basarili.
@@ -107,11 +111,11 @@ Mevcut test kapsami:
 - FastAPI health, analiz, soru ve karsilastirma sozlesmeleri.
 - FastAPI urun/ilac liste ve detay endpointleri ile 404 sozlesmeleri.
 - FastAPI katalog ve yerel asset fallback davranisi.
+- Acilis bilgilendirme, ana sayfa etken madde aramasi, ilac alt filtresi ve
+  bulunamayan urun rotasi widget akislari.
 
 Eksik test alanlari:
 
-- Ana sayfa widget seviyesinde arama ve kategori/alt filtre etkilesimi.
-- Routing ve urun detay ID bulunamama akisi.
 - Tam uygulama seviyesinde widget/integration testi.
 
 ## Bilinen Riskler ve Teknik Borclar

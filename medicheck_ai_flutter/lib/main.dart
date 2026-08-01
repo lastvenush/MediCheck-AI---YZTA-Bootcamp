@@ -4,21 +4,34 @@ import 'package:go_router/go_router.dart';
 
 import 'features/home/home_screen.dart';
 import 'features/home/product_detail_screen.dart';
+import 'features/onboarding/disclaimer_screen.dart';
 import 'features/product_comparison/presentation/product_comparison_screen.dart';
 import 'models/product.dart';
+import 'services/product_service.dart';
 
 void main() {
   runApp(const ProviderScope(child: MediCheckApp()));
 }
 
 class MediCheckApp extends StatelessWidget {
-  const MediCheckApp({super.key});
+  const MediCheckApp({this.initialLocation = '/', this.loadCatalog, super.key});
+
+  final String initialLocation;
+  final ProductCatalogLoader? loadCatalog;
 
   @override
   Widget build(BuildContext context) {
     final router = GoRouter(
+      initialLocation: initialLocation,
       routes: [
-        GoRoute(path: '/', builder: (context, state) => const HomeScreen()),
+        GoRoute(
+          path: '/',
+          builder: (context, state) => const DisclaimerScreen(),
+        ),
+        GoRoute(
+          path: '/home',
+          builder: (context, state) => HomeScreen(loadCatalog: loadCatalog),
+        ),
         GoRoute(
           path: '/compare',
           builder: (context, state) {
@@ -30,7 +43,12 @@ class MediCheckApp extends StatelessWidget {
         GoRoute(
           path: '/product/:id',
           builder: (context, state) {
-            return ProductDetailScreen(productId: state.pathParameters['id']!);
+            return ProductDetailScreen(
+              productId: state.pathParameters['id']!,
+              loadProducts: loadCatalog == null
+                  ? null
+                  : () async => (await loadCatalog!()).products,
+            );
           },
         ),
       ],

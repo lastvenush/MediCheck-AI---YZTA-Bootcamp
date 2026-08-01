@@ -8,7 +8,9 @@ import '../../shared/widgets/product_card.dart';
 import '../ai_assistant/presentation/ai_assistant_screen.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  const HomeScreen({this.loadCatalog, super.key});
+
+  final ProductCatalogLoader? loadCatalog;
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -53,7 +55,8 @@ class _HomeScreenState extends State<HomeScreen> {
       yuklemeHatasi = null;
     });
     try {
-      final sonuc = await ProductService.loadCatalog();
+      final sonuc =
+          await (widget.loadCatalog?.call() ?? ProductService.loadCatalog());
       if (!mounted) return;
       setState(() {
         tumUrunler = sonuc.products;

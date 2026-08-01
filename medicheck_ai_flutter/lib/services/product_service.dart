@@ -8,6 +8,8 @@ import 'ai_api_client.dart';
 
 enum ProductCatalogSource { api, assetFallback }
 
+typedef ProductCatalogLoader = Future<ProductCatalogResult> Function();
+
 class ProductCatalogResult {
   const ProductCatalogResult({required this.products, required this.source});
 

@@ -7,9 +7,14 @@ import '../ai_analysis/data/remote_ai_analysis_service.dart';
 import '../ai_analysis/presentation/widgets/ai_analysis_card.dart';
 
 class ProductDetailScreen extends StatefulWidget {
-  const ProductDetailScreen({required this.productId, super.key});
+  const ProductDetailScreen({
+    required this.productId,
+    this.loadProducts,
+    super.key,
+  });
 
   final String productId;
+  final Future<List<Product>> Function()? loadProducts;
 
   @override
   State<ProductDetailScreen> createState() => _ProductDetailScreenState();
@@ -21,13 +26,17 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   @override
   void initState() {
     super.initState();
-    _productsFuture = ProductService.loadProducts();
+    _productsFuture = _loadProducts();
+  }
+
+  Future<List<Product>> _loadProducts() {
+    return widget.loadProducts?.call() ?? ProductService.loadProducts();
   }
 
   void _retry() {
     ProductService.clearCache();
     setState(() {
-      _productsFuture = ProductService.loadProducts();
+      _productsFuture = _loadProducts();
     });
   }
 
