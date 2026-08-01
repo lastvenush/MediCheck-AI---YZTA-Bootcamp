@@ -699,6 +699,409 @@ Sprint 2 sonunda ürün, temel kullanıcı akışını gösteren çalışır bir
 - **Product Owner:** Pelin Yaşar
 - **Scrum Master:** Pelin Yaşar
 - **Mobil geliştirme:** Seymen
+- **Backend, veri ve test desteği:** Yusuf eM
+- **AI ve entegrasyon:** Pelin Yaşar
+
+> Irmak Sprint 3 başlamadan önce ekipten ayrıldığı için görev dağılımı güncellenmiştir. Product Owner ve Scrum Master sorumluluklarını Pelin Yaşar üstlenmiştir.
+
+---
+
+## Sprint 3 Hedefi
+
+Bu sprintte uygulamanın temel kullanıcı akışının tamamlanması hedeflenmiştir:
+
+1. Kullanıcının güneş kremi ve ilaç kataloglarını görüntüleyebilmesi
+2. Ürün detaylarına ulaşabilmesi
+3. Ürün görsellerinin çevrimdışı olarak gösterilebilmesi
+4. Kullanıcının metin girerek yapay zekâ destekli analiz alabilmesi
+5. Flutter uygulaması ile FastAPI servisinin entegre çalışması
+6. Kritik özelliklerin otomatik testlerle doğrulanması
+
+---
+
+## Sprint 3 Görev Dağılımı
+
+### Pelin Yaşar
+
+- Scrum Master ve Product Owner sorumluluklarını yürütmek
+- Sprint hedeflerini ve önceliklerini belirlemek
+- Sprint görev dağılımını güncellemek
+- Gemini API entegrasyonunu geliştirmek
+- Yapay zekâ istemlerini hazırlamak
+- Gemini yanıtlarının güvenli biçimde işlenmesini sağlamak
+- API anahtarını ortam değişkeni üzerinden yönetmek
+- Yapay zekâ servisinde hata ve kota durumları için fallback sistemi hazırlamak
+- Flutter ve backend arasındaki entegrasyonu desteklemek
+- Teknik dokümantasyonu hazırlamak
+- Sprint çıktılarını kontrol etmek
+
+### Seymen
+
+- Flutter kullanıcı arayüzlerini geliştirmek
+- Katalog ve ürün detay ekranlarını hazırlamak
+- Yerel ürün görsellerinin uygulamada gösterilmesini sağlamak
+- Mobil uygulama ile backend arasındaki bağlantıyı geliştirmek
+- Kullanıcı akışlarını ve ekran durumlarını iyileştirmek
+
+### Yusuf
+
+- Ürün verilerini hazırlamak ve düzenlemek
+- Backend geliştirmesine destek olmak
+- API endpointlerinin doğrulanmasına yardımcı olmak
+- Test senaryolarına ve kalite kontrol çalışmalarına katkı sağlamak
+- Veri tutarlılığını kontrol etmek
+
+---
+
+## Sprint 3 Boyunca Tamamlanan Çalışmalar
+
+### Yapay Zekâ Entegrasyonu
+
+- Gemini API bağlantısı oluşturuldu.
+- Yapay zekâ işlemleri Flutter uygulamasından ayrılarak FastAPI backend üzerinden yönetildi.
+- Model yapılandırması ortam değişkenine taşındı.
+- API anahtarının kaynak koda yazılması engellendi.
+- Yanıt doğrulama ve hata yönetimi eklendi.
+- Gemini servisinin kullanılamadığı durumlar için güvenli fallback yanıtları oluşturuldu.
+- Yapay zekâ çıktılarının tıbbi teşhis yerine bilgilendirme amacı taşıdığı açıkça belirtildi.
+
+### Backend
+
+- FastAPI tabanlı backend yapısı hazırlandı.
+- Sağlık kontrolü endpointi oluşturuldu.
+- Yapay zekâ analiz endpointleri geliştirildi.
+- İstek ve yanıt modelleri tanımlandı.
+- CORS yapılandırması eklendi.
+- Ortam değişkenleri için `.env.example` dosyası hazırlandı.
+- Gerçek `.env` dosyasının GitHub’a gönderilmesi engellendi.
+- Backend testleri oluşturuldu ve çalıştırıldı.
+
+### Flutter Uygulaması
+
+- Güneş kremi kataloğu geliştirildi.
+- İlaç kataloğu geliştirildi.
+- Ürün detay ekranı hazırlandı.
+- Ürün kartları yeniden kullanılabilir widget yapısına taşındı.
+- Yerel ve internet tabanlı görselleri destekleyen ortak ürün görsel bileşeni eklendi.
+- Görseller yüklenemediğinde gösterilecek hata durumu oluşturuldu.
+- Ürün verileri JSON tabanlı yapı üzerinden uygulamaya bağlandı.
+- Backend API servisi Flutter uygulamasına entegre edildi.
+- Yüklenme, başarı ve hata durumları ele alındı.
+
+---
+
+## Ürün Kataloğu
+
+### Güneş Kremleri
+
+Sprint 3 sonunda aşağıdaki güneş kremi ürünleri katalogda yer almaktadır:
+
+1. Beauty of Joseon Relief Sun
+2. Bioderma Photoderm Aquafluide
+3. CeraVe Facial Moisturising Lotion SPF 50
+4. Eucerin Oil Control Sun Gel-Cream
+5. ISDIN Fusion Water
+6. La Roche-Posay Anthelios UVMune 400
+7. Nivea Sun UV Face Shine Control
+8. Solante Pigmenta
+9. Vichy Capital Soleil UV-Age Daily
+10. Vichy Capital Soleil UV-Clear
+
+### İlaçlar
+
+Sprint 3 sonunda aşağıdaki ilaçlar katalogda yer almaktadır:
+
+1. Arveles 25 mg
+2. Buscopan
+3. Majezik
+4. Parol 500 mg
+5. Zyrtec 10 mg
+
+> İlaç bilgileri yalnızca genel bilgilendirme amacıyla sunulmaktadır. Uygulama teşhis koymaz, reçete oluşturmaz ve doktor ya da eczacı görüşünün yerine geçmez.
+
+---
+
+## Yerel Ürün Görselleri
+
+Ürünlerin tamamı için yerel görseller projeye eklenmiştir. Böylece katalog internet bağlantısı bulunmadığında da ürün görsellerini gösterebilmektedir.
+
+Görsellerin bulunduğu dizin:
+
+```text
+medicheck_ai_flutter/assets/images/products/
+```
+
+Görseller Flutter projesine `pubspec.yaml` üzerinden tanıtılmıştır. Ürün verilerindeki `imageUrl` alanları yerel dosya yollarına yönlendirilmiştir.
+
+Görsel kaynakları ve kullanım notları aşağıdaki dosyada kayıt altına alınmıştır:
+
+```text
+medicheck_ai_flutter/assets/IMAGE_SOURCES.md
+```
+
+> Ürün görsellerinin telif ve ticari kullanım izinleri uygulamanın yayımlanmasından önce ayrıca kontrol edilmelidir.
+
+---
+
+## API Endpointleri
+
+### Sağlık Kontrolü
+
+```http
+GET /health
+```
+
+Backend servisinin çalışıp çalışmadığını kontrol eder.
+
+### Yapay Zekâ Analizi
+
+```http
+POST /api/v1/ai/analyze
+```
+
+Kullanıcının gönderdiği metni analiz ederek yapılandırılmış bir yanıt üretir.
+
+### İstek Örneği
+
+```json
+{
+  "text": "Bu ürünü hassas cildimde kullanabilir miyim?",
+  "context": "Güneş kremi ürün detayı"
+}
+```
+
+### Yanıt Örneği
+
+```json
+{
+  "summary": "Ürünü kullanmadan önce içerik listesini kontrol etmeniz önerilir.",
+  "warnings": [
+    "Bilinen bir alerjiniz varsa sağlık uzmanına danışın."
+  ],
+  "recommendation": "Yeni ürünleri önce cildin küçük bir bölümünde test edin.",
+  "disclaimer": "Bu yanıt yalnızca genel bilgilendirme amaçlıdır."
+}
+```
+
+---
+
+## Ortam Değişkenleri
+
+Backend yapılandırması için `backend/.env.example` dosyası örnek alınmalıdır.
+
+```env
+GEMINI_API_KEY=your_api_key_here
+GEMINI_MODEL=gemini-3.5-flash-lite
+```
+
+Gerçek API anahtarı yalnızca yerel `.env` dosyasında tutulmalıdır. `.env` dosyası GitHub’a gönderilmemelidir.
+
+---
+
+## Projeyi Çalıştırma
+
+### Backend
+
+```bash
+cd backend
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+uvicorn app.main:app --reload
+```
+
+Backend varsayılan olarak aşağıdaki adreste çalışır:
+
+```text
+http://127.0.0.1:8000
+```
+
+Swagger dokümantasyonu:
+
+```text
+http://127.0.0.1:8000/docs
+```
+
+### Flutter
+
+```bash
+cd medicheck_ai_flutter
+flutter pub get
+flutter run
+```
+
+Web üzerinde çalıştırmak için:
+
+```bash
+flutter run -d chrome
+```
+
+---
+
+## Test ve Kalite Kontrol
+
+Sprint 3 sonunda gerçekleştirilen kontroller:
+
+- Flutter testleri başarıyla tamamlandı.
+- Backend testleri başarıyla tamamlandı.
+- Flutter statik analizinde hata bulunmadı.
+- Flutter web üretim derlemesi başarıyla oluşturuldu.
+- WebAssembly uyumluluk kontrolü başarıyla tamamlandı.
+- Backend sağlık kontrolü doğrulandı.
+- Yapay zekâ analiz endpointi doğrulandı.
+- Gerçek Gemini API bağlantısı test edildi.
+- API anahtarının Git geçmişine eklenmediği kontrol edildi.
+- Katalog ve ürün detay ekranlarında yerel görseller kontrol edildi.
+
+### Doğrulanan Test Sonuçları
+
+- **Flutter:** 34 test başarılı
+- **Backend:** 14 test başarılı
+- **Flutter analyze:** Hata yok
+- **Flutter web build:** Başarılı
+- **WebAssembly dry run:** Başarılı
+
+---
+
+## Sprint 3 User Story’leri
+
+### User Story 1
+
+Bir kullanıcı olarak güneş kremi ürünlerini listelemek istiyorum; böylece ürünleri inceleyip karşılaştırabilirim.
+
+**Kabul kriterleri:**
+
+- Ürünler katalog ekranında listelenmelidir.
+- Her üründe ad, marka ve görsel bulunmalıdır.
+- Kullanıcı ürün detay ekranına geçebilmelidir.
+
+### User Story 2
+
+Bir kullanıcı olarak ilaç bilgilerini görüntülemek istiyorum; böylece ilaçlar hakkında genel bilgi edinebilirim.
+
+**Kabul kriterleri:**
+
+- İlaçlar katalog ekranında listelenmelidir.
+- İlaç detayları okunabilir biçimde sunulmalıdır.
+- Tıbbi bilgilendirme uyarısı gösterilmelidir.
+
+### User Story 3
+
+Bir kullanıcı olarak ürün hakkında yapay zekâya soru sormak istiyorum; böylece ürünle ilgili genel ve anlaşılır bir açıklama alabilirim.
+
+**Kabul kriterleri:**
+
+- Kullanıcı metin girebilmelidir.
+- İstek backend üzerinden Gemini servisine gönderilmelidir.
+- Yanıt anlaşılır bir biçimde gösterilmelidir.
+- Hata durumunda kullanıcı dostu bir mesaj sunulmalıdır.
+- Yanıtta tıbbi bilgilendirme uyarısı bulunmalıdır.
+
+### User Story 4
+
+Bir kullanıcı olarak ürün görsellerini internet bağlantısı olmadan da görmek istiyorum.
+
+**Kabul kriterleri:**
+
+- Ürün görselleri uygulamanın yerel varlıklarında bulunmalıdır.
+- Tüm katalog ürünleri bir görselle eşleşmelidir.
+- Görsel yüklenemezse uygun bir yedek görünüm sunulmalıdır.
+
+---
+
+## Definition of Done
+
+Bir görev aşağıdaki koşullar sağlandığında tamamlanmış kabul edilir:
+
+- Geliştirme tamamlandı.
+- Kod çalışır durumda.
+- İlgili testler başarıyla geçti.
+- Statik analizde kritik hata bulunmuyor.
+- API anahtarı veya başka bir gizli bilgi kaynak kodda bulunmuyor.
+- Kullanıcı arayüzünde yüklenme ve hata durumları ele alındı.
+- Gerekli teknik açıklamalar dokümantasyona eklendi.
+- Değişiklikler GitHub’a gönderildi.
+- Tamamlanan özellik temel kullanıcı akışı içinde doğrulandı.
+
+---
+
+## Sprint Review
+
+Sprint 3 sonunda aşağıdaki çıktılar elde edilmiştir:
+
+- Güneş kremi kataloğu tamamlandı.
+- İlaç kataloğu tamamlandı.
+- Ürün detay ekranı geliştirildi.
+- Yerel ürün görselleri projeye eklendi.
+- FastAPI backend oluşturuldu.
+- Gemini destekli yapay zekâ servisi entegre edildi.
+- Hata ve fallback sistemi geliştirildi.
+- Flutter ve backend testleri tamamlandı.
+- Web derlemesi doğrulandı.
+
+Sprint hedefinin teknik geliştirme bölümü tamamlanmıştır. Sprint panosu, son ekran görüntüleri ve demo videosu teslim öncesinde dokümana eklenecektir.
+
+---
+
+## Sprint Retrospective
+
+### İyi Gidenler
+
+- Flutter ve backend sorumlulukları ayrıştırıldı.
+- Gemini anahtarı mobil uygulamaya gömülmeden güvenli şekilde yönetildi.
+- Ürün görselleri yerel dosyalara taşındı.
+- Otomatik testler temel hataların erken tespit edilmesini sağladı.
+- Ekip değişikliğine rağmen görev dağılımı yeniden düzenlendi.
+- Teknik MVP hedefleri tamamlandı.
+
+### İyileştirilmesi Gerekenler
+
+- Daily Scrum notları sprint boyunca daha düzenli tutulmalıdır.
+- Sprint panosu görevlerle eş zamanlı güncellenmelidir.
+- Görsel lisansları daha erken kontrol edilmelidir.
+- Gerçek cihaz testlerine daha fazla zaman ayrılmalıdır.
+- Ekip değişikliklerinin sprint planına etkisi daha erken değerlendirilmelidir.
+
+### Sonraki Sprint İçin Aksiyonlar
+
+- Sprint başında görev sahipleri kesinleştirilecek.
+- Günlük ilerleme notları düzenli kaydedilecek.
+- Fiziksel Android ve iOS cihaz testleri genişletilecek.
+- Ürün görsellerinin lisans durumu yeniden kontrol edilecek.
+- Kullanıcı geri bildirimleri toplanacak.
+- Yapay zekâ yanıtlarının doğruluk ve güvenlik kontrolleri geliştirilecek.
+
+---
+
+## Teslim Öncesinde Eklenecekler
+
+Aşağıdaki içerikler teknik geliştirme dışında ekip tarafından tamamlanacaktır:
+
+- [ ] Sprint 3 görev panosu ekran görüntüsü
+- [ ] Uygulamanın son ekran görüntüleri
+- [ ] Swagger API ekran görüntüsü
+- [ ] Sprint 3 demo videosu
+- [ ] Sprint boyunca tutulan gerçek Daily Scrum notları
+- [ ] Sprint Review ve Retrospective metninin ekip tarafından son kontrolü
+
+---
+
+## Sprint 3 Sonucu
+
+Sprint 3 sonunda MediCheck AI; ürün kataloglarını gösterebilen, yerel ürün görsellerini kullanabilen, detay ekranları sunan ve Gemini destekli yapay zekâ analizini güvenli bir backend üzerinden gerçekleştirebilen çalışır bir MVP seviyesine ulaştırılmıştır.
+
+Teknik geliştirme ve test görevleri tamamlanmıştır. Sprint dokümanları, görev panosu görseli ve demo videosu teslim öncesinde ayrıca eklenecektir.
+
+
+# MediCheck AI — Sprint 3
+
+## Sprint Bilgileri
+
+- **Sprint:** 3
+- **Sprint hedefi:** İlaç ve güneş kremi kataloglarını tamamlamak, ürün detay ekranlarını geliştirmek, Gemini destekli yapay zekâ analizini sisteme bağlamak ve uygulamayı test edilebilir bir MVP seviyesine ulaştırmak.
+- **Product Owner:** Pelin Yaşar
+- **Scrum Master:** Pelin Yaşar
+- **Mobil geliştirme:** Seymen
 - **Backend, veri ve test desteği:** Yusuf
 - **AI ve entegrasyon:** Pelin Yaşar
 
