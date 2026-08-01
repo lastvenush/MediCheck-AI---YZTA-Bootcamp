@@ -18,11 +18,11 @@ class ProductCard extends StatelessWidget {
       child: ListTile(
         contentPadding: const EdgeInsets.all(16),
         leading: CircleAvatar(
-          radius: 24, 
+          radius: 24,
           backgroundColor: product.isMedicine
               ? Colors.red[50]
               : Colors.orange[50],
-          
+
           child: product.imageUrl.isNotEmpty
               ? ClipOval(
                   child: Image.network(
@@ -30,18 +30,22 @@ class ProductCard extends StatelessWidget {
                     width: 48,
                     height: 48,
                     fit: BoxFit.cover,
-                    
+
                     errorBuilder: (context, error, stackTrace) {
                       return Icon(
                         product.isMedicine ? Icons.medication : Icons.wb_sunny,
-                        color: product.isMedicine ? Colors.red[400] : Colors.orange[400],
+                        color: product.isMedicine
+                            ? Colors.red[400]
+                            : Colors.orange[400],
                       );
                     },
                   ),
                 )
               : Icon(
                   product.isMedicine ? Icons.medication : Icons.wb_sunny,
-                  color: product.isMedicine ? Colors.red[400] : Colors.orange[400],
+                  color: product.isMedicine
+                      ? Colors.red[400]
+                      : Colors.orange[400],
                 ),
         ),
         title: Text(
@@ -52,9 +56,20 @@ class ProductCard extends StatelessWidget {
           padding: const EdgeInsets.only(top: 4),
           child: Text('${product.brand} • ${product.category}'),
         ),
-       
+        trailing: Tooltip(
+          message: product.hasReviewedSources
+              ? 'Kaynak bilgisi incelendi'
+              : 'Kaynak incelemesi bekleniyor',
+          child: Icon(
+            product.hasReviewedSources
+                ? Icons.fact_check_outlined
+                : Icons.info_outline,
+            color: product.hasReviewedSources ? Colors.blue : Colors.grey,
+            size: 28,
+          ),
+        ),
         onTap: () => context.push('/product/${product.id}'),
       ),
     );
-  } 
+  }
 }

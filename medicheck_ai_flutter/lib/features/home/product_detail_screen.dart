@@ -1,20 +1,49 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart'; 
+import 'package:go_router/go_router.dart';
 
 import '../../models/product.dart';
 import '../../services/product_service.dart';
-import '../ai_analysis/data/mock_ai_analysis_service.dart';
+import '../ai_analysis/data/remote_ai_analysis_service.dart';
 import '../ai_analysis/presentation/widgets/ai_analysis_card.dart';
 
-class ProductDetailScreen extends StatelessWidget {
-  const ProductDetailScreen({required this.productId, super.key});
+class ProductDetailScreen extends StatefulWidget {
+  const ProductDetailScreen({
+    required this.productId,
+    this.loadProducts,
+    super.key,
+  });
 
   final String productId;
+  final Future<List<Product>> Function()? loadProducts;
+
+  @override
+  State<ProductDetailScreen> createState() => _ProductDetailScreenState();
+}
+
+class _ProductDetailScreenState extends State<ProductDetailScreen> {
+  late Future<List<Product>> _productsFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _productsFuture = _loadProducts();
+  }
+
+  Future<List<Product>> _loadProducts() {
+    return widget.loadProducts?.call() ?? ProductService.loadProducts();
+  }
+
+  void _retry() {
+    ProductService.clearCache();
+    setState(() {
+      _productsFuture = _loadProducts();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Product>>(
-      future: ProductService.loadProducts(),
+      future: _productsFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Scaffold(
@@ -22,13 +51,37 @@ class ProductDetailScreen extends StatelessWidget {
           );
         }
 
-        if (snapshot.hasError || !snapshot.hasData || snapshot.data!.isEmpty) {
-          return const Scaffold(body: Center(child: Text('Ürün bulunamadı.')));
+        if (snapshot.hasError) {
+          return Scaffold(
+            appBar: AppBar(title: const Text('Ürün detayı')),
+            body: Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(Icons.error_outline, size: 48),
+                  const SizedBox(height: 12),
+                  const Text('Ürün bilgileri yüklenemedi.'),
+                  const SizedBox(height: 12),
+                  FilledButton.icon(
+                    onPressed: _retry,
+                    icon: const Icon(Icons.refresh),
+                    label: const Text('Yeniden dene'),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }
+
+        if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          return const Scaffold(
+            body: Center(child: Text('Henüz katalog verisi bulunmuyor.')),
+          );
         }
 
         Product? product;
         for (final item in snapshot.data!) {
-          if (item.id == productId) {
+          if (item.id == widget.productId) {
             product = item;
             break;
           }
@@ -40,7 +93,7 @@ class ProductDetailScreen extends StatelessWidget {
 
         return _ProductDetailContent(
           product: product,
-          tumUrunler: snapshot.data!, 
+          tumUrunler: snapshot.data!,
         );
       },
     );
@@ -52,6 +105,8 @@ class _ProductDetailContent extends StatelessWidget {
     required this.product,
     required this.tumUrunler,
   });
+
+  static final _aiAnalysisService = RemoteAiAnalysisService();
 
   final Product product;
   final List<Product> tumUrunler;
@@ -116,17 +171,31 @@ class _ProductDetailContent extends StatelessWidget {
                       child: ListTile(
                         leading: CircleAvatar(
                           backgroundColor: Colors.amber[50],
-                          child: Icon(Icons.wb_sunny, color: Colors.amber[400], size: 20),
+                          child: Icon(
+                            Icons.wb_sunny,
+                            color: Colors.amber[400],
+                            size: 20,
+                          ),
                         ),
                         title: Text(
                           digerUrun.name,
-                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                          ),
                         ),
-                        subtitle: Text(digerUrun.brand, style: const TextStyle(fontSize: 12)),
-                        trailing: Icon(Icons.arrow_forward_ios, size: 14, color: Colors.purple[300]),
+                        subtitle: Text(
+                          digerUrun.brand,
+                          style: const TextStyle(fontSize: 12),
+                        ),
+                        trailing: Icon(
+                          Icons.arrow_forward_ios,
+                          size: 14,
+                          color: Colors.purple[300],
+                        ),
                         onTap: () {
-                          Navigator.pop(context); 
-                          context.push('/compare', extra: [product, digerUrun]); 
+                          Navigator.pop(context);
+                          context.push('/compare', extra: [product, digerUrun]);
                         },
                       ),
                     );
@@ -174,7 +243,6 @@ class _ProductDetailContent extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            
             Container(
               width: double.infinity,
               height: 250,
@@ -200,7 +268,7 @@ class _ProductDetailContent extends StatelessWidget {
                     : Image.network(
                         product.imageUrl,
                         fit: BoxFit.contain,
-                        
+
                         errorBuilder: (context, error, stackTrace) {
                           return Center(
                             child: Column(
@@ -214,8 +282,11 @@ class _ProductDetailContent extends StatelessWidget {
                                 const SizedBox(height: 8),
                                 Text(
                                   'Görsel Yüklenemedi',
-                                  style: TextStyle(color: Colors.grey[400], fontSize: 12),
-                                )
+                                  style: TextStyle(
+                                    color: Colors.grey[400],
+                                    fontSize: 12,
+                                  ),
+                                ),
                               ],
                             ),
                           );
@@ -231,13 +302,16 @@ class _ProductDetailContent extends StatelessWidget {
                   child: Align(
                     alignment: Alignment.centerLeft,
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 6,
+                      ),
                       decoration: BoxDecoration(
                         color: Colors.blue[50],
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Text(
-                        'Marka / Üretici Firma: ${product.brand}',
+                        'Marka / Üretici Firma: ${product.displayManufacturer}',
                         style: TextStyle(
                           color: Colors.blue[800],
                           fontSize: 13,
@@ -252,7 +326,10 @@ class _ProductDetailContent extends StatelessWidget {
                     onTap: () => _karsilastirmaMenusuGoster(context),
                     borderRadius: BorderRadius.circular(8),
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 6,
+                      ),
                       decoration: BoxDecoration(
                         color: Colors.purple[50],
                         borderRadius: BorderRadius.circular(8),
@@ -260,7 +337,11 @@ class _ProductDetailContent extends StatelessWidget {
                       ),
                       child: Row(
                         children: [
-                          Icon(Icons.compare_arrows, size: 16, color: Colors.purple[800]),
+                          Icon(
+                            Icons.compare_arrows,
+                            size: 16,
+                            color: Colors.purple[800],
+                          ),
                           const SizedBox(width: 4),
                           Text(
                             'Karşılaştır',
@@ -296,10 +377,7 @@ class _ProductDetailContent extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 24),
-            AiAnalysisCard(
-              product: product,
-              service: const MockAiAnalysisService(),
-            ),
+            AiAnalysisCard(product: product, service: _aiAnalysisService),
             const SizedBox(height: 32),
             Text(
               isIlac
@@ -338,7 +416,7 @@ class _ProductDetailContent extends StatelessWidget {
             Wrap(
               spacing: 8,
               runSpacing: 8,
-              children: product.ingredients
+              children: product.primaryIngredients
                   .map(
                     (ingredient) => Chip(
                       label: Text(ingredient),
@@ -352,6 +430,35 @@ class _ProductDetailContent extends StatelessWidget {
                   )
                   .toList(growable: false),
             ),
+            if (product.sources.isNotEmpty) ...[
+              const SizedBox(height: 32),
+              const Text(
+                'Bilgi Kaynakları',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                product.lastReviewedAt.isEmpty
+                    ? 'İnceleme tarihi belirtilmemiştir.'
+                    : 'Son içerik incelemesi: ${product.lastReviewedAt}',
+                style: TextStyle(color: Colors.grey[700], fontSize: 13),
+              ),
+              const SizedBox(height: 8),
+              ...product.sources.map(
+                (source) => Card(
+                  elevation: 0,
+                  color: Colors.blue[50],
+                  child: ListTile(
+                    leading: const Icon(Icons.description_outlined),
+                    title: Text(source.title),
+                    subtitle: SelectableText(
+                      source.url,
+                      style: const TextStyle(fontSize: 12),
+                    ),
+                  ),
+                ),
+              ),
+            ],
             const SizedBox(height: 40),
             Container(
               padding: const EdgeInsets.all(16),

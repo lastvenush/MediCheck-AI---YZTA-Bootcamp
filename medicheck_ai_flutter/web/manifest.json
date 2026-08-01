@@ -1,11 +1,11 @@
 {
-    "name": "medicheck_ai_flutter",
-    "short_name": "medicheck_ai_flutter",
+    "name": "MediCheck AI",
+    "short_name": "MediCheck",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "Kaynaklı ürün bilgileri ve güvenli AI destekli sağlık okuryazarlığı uygulaması.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

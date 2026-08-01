@@ -2,11 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../models/product.dart';
+import '../../services/product_filter.dart';
 import '../../services/product_service.dart';
 import '../../shared/widgets/product_card.dart';
+import '../ai_assistant/presentation/ai_assistant_screen.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  const HomeScreen({this.loadCatalog, super.key});
+
+  final ProductCatalogLoader? loadCatalog;
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -18,26 +22,24 @@ class _HomeScreenState extends State<HomeScreen> {
   String seciliAltFiltre = '';
   List<Product> tumUrunler = [];
   bool yukleniyorMu = true;
+  String? yuklemeHatasi;
+  bool yerelVeriKullaniliyor = false;
 
-  
   List<Product> seciliUrunler = [];
 
   final List<String> gunesKremiFiltreleri = [
     '☀️ SPF50+',
-    '💧 Suya Dayanıklı',
     '🌿 Parfümsüz',
     '👶 Hassas Cilt',
-    '✨ Mat Bitiş',
+    '✨ Yağlı Cilt',
+    '💧 Kuru Cilt',
     '🧴 Mineral Filtre',
   ];
 
   final List<String> ilacFiltreleri = [
-    '💊 Ağrı Kesici',
-    '🤧 Soğuk Algınlığı',
-    '🛡️ Vitamin',
-    '🩹 İlk Yardım',
-    '💧 Şurup',
-    '🌿 Bitkisel',
+    '💊 Ağrı / Ateş',
+    '🤧 Alerji',
+    '🩹 Spazm',
   ];
 
   @override
@@ -47,14 +49,30 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> _urunleriGetir() async {
-    final urunler = await ProductService.loadProducts();
-    if (!mounted) {
-      return;
-    }
+    ProductService.clearCache();
     setState(() {
-      tumUrunler = urunler;
-      yukleniyorMu = false;
+      yukleniyorMu = true;
+      yuklemeHatasi = null;
     });
+    try {
+      final sonuc =
+          await (widget.loadCatalog?.call() ?? ProductService.loadCatalog());
+      if (!mounted) return;
+      setState(() {
+        tumUrunler = sonuc.products;
+        yerelVeriKullaniliyor =
+            sonuc.source == ProductCatalogSource.assetFallback;
+        yukleniyorMu = false;
+      });
+    } on Object {
+      if (!mounted) return;
+      setState(() {
+        tumUrunler = [];
+        yuklemeHatasi =
+            'Ürünler yüklenemedi. Bağlantınızı kontrol edip yeniden deneyin.';
+        yukleniyorMu = false;
+      });
+    }
   }
 
   @override
@@ -62,27 +80,11 @@ class _HomeScreenState extends State<HomeScreen> {
     final filtrelenmisUrunler = tumUrunler.where((urun) {
       final kategoriUyuyorMu =
           seciliKategori == 'Tümü' || urun.category == seciliKategori;
-      final aramaUyuyorMu = urun.name.toLowerCase().contains(
-        aramaMetni.toLowerCase(),
+      final aramaUyuyorMu = ProductFilter.matchesQuery(urun, aramaMetni);
+      final altFiltreUyuyorMu = ProductFilter.matchesSubfilter(
+        urun,
+        seciliAltFiltre,
       );
-
-      var altFiltreUyuyorMu = true;
-      if (seciliAltFiltre.isNotEmpty) {
-        final filtreKelimesi = seciliAltFiltre
-            .split(' ')
-            .skip(1)
-            .join(' ')
-            .toLowerCase();
-        altFiltreUyuyorMu =
-            urun.name.toLowerCase().contains(filtreKelimesi) ||
-            urun.description.toLowerCase().contains(filtreKelimesi) ||
-            urun.ingredients.any(
-              (item) => item.toLowerCase().contains(filtreKelimesi),
-            ) ||
-            urun.usageInstructions.toLowerCase().contains(filtreKelimesi) ||
-            urun.sideEffects.toLowerCase().contains(filtreKelimesi) ||
-            urun.contraindications.toLowerCase().contains(filtreKelimesi);
-      }
 
       return kategoriUyuyorMu && aramaUyuyorMu && altFiltreUyuyorMu;
     }).toList();
@@ -126,9 +128,19 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ],
         ),
+        actions: [
+          IconButton(
+            key: const Key('open-comparison'),
+            tooltip: 'Ürün karşılaştır',
+            onPressed: () => context.push('/compare'),
+            icon: const Icon(Icons.compare_arrows_rounded),
+          ),
+        ],
       ),
       body: yukleniyorMu
           ? const Center(child: CircularProgressIndicator())
+          : yuklemeHatasi != null
+          ? _buildCatalogError()
           : Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -172,7 +184,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             setState(() => aramaMetni = deger);
                           },
                           decoration: InputDecoration(
-                            hintText: 'İlaç veya ürün ara...',
+                            hintText: 'Ürün, marka veya etken madde ara...',
                             hintStyle: TextStyle(color: Colors.grey[400]),
                             prefixIcon: const Icon(
                               Icons.search,
@@ -291,8 +303,38 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                   ),
+                if (yerelVeriKullaniliyor)
+                  Container(
+                    width: double.infinity,
+                    margin: const EdgeInsets.fromLTRB(16, 6, 16, 4),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 10,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.amber[50],
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: Colors.amber[200]!),
+                    ),
+                    child: const Row(
+                      children: [
+                        Icon(Icons.cloud_off_outlined, size: 18),
+                        SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            'Sunucuya ulaşılamadı; yerel demo verisi gösteriliyor.',
+                            style: TextStyle(fontSize: 12),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 Expanded(
-                  child: filtrelenmisUrunler.isEmpty
+                  child: tumUrunler.isEmpty
+                      ? const Center(
+                          child: Text('Henüz katalog verisi bulunmuyor.'),
+                        )
+                      : filtrelenmisUrunler.isEmpty
                       ? Center(
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -334,10 +376,16 @@ class _HomeScreenState extends State<HomeScreen> {
                                             if (seciliUrunler.length < 2) {
                                               seciliUrunler.add(urun);
                                             } else {
-                                              ScaffoldMessenger.of(context).showSnackBar(
+                                              ScaffoldMessenger.of(
+                                                context,
+                                              ).showSnackBar(
                                                 const SnackBar(
-                                                  content: Text('Karşılaştırma için en fazla 2 ürün seçebilirsiniz.'),
-                                                  duration: Duration(seconds: 2),
+                                                  content: Text(
+                                                    'Karşılaştırma için en fazla 2 ürün seçebilirsiniz.',
+                                                  ),
+                                                  duration: Duration(
+                                                    seconds: 2,
+                                                  ),
                                                 ),
                                               );
                                             }
@@ -348,9 +396,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       },
                                     ),
                                   ),
-                                Expanded(
-                                  child: ProductCard(product: urun),
-                                ),
+                                Expanded(child: ProductCard(product: urun)),
                               ],
                             );
                           },
@@ -358,7 +404,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ],
             ),
-      
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: seciliUrunler.length == 2
           ? FloatingActionButton.extended(
@@ -369,7 +414,10 @@ class _HomeScreenState extends State<HomeScreen> {
               icon: const Icon(Icons.compare_arrows, color: Colors.white),
               label: const Text(
                 'Karşılaştır',
-                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             )
           : Container(
@@ -395,13 +443,17 @@ class _HomeScreenState extends State<HomeScreen> {
                   Navigator.push(
                     context,
                     MaterialPageRoute<void>(
-                      builder: (context) => const AiBotScreen(),
+                      builder: (context) => const AiAssistantScreen(),
                     ),
                   );
                 },
                 backgroundColor: Colors.transparent,
                 elevation: 0,
-                child: const Icon(Icons.auto_awesome, color: Colors.white, size: 32),
+                child: const Icon(
+                  Icons.auto_awesome,
+                  color: Colors.white,
+                  size: 32,
+                ),
               ),
             ),
     );
@@ -447,6 +499,33 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  Widget _buildCatalogError() {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.error_outline, size: 52, color: Colors.red[400]),
+            const SizedBox(height: 14),
+            Text(
+              yuklemeHatasi!,
+              textAlign: TextAlign.center,
+              style: TextStyle(color: Colors.grey[700], height: 1.4),
+            ),
+            const SizedBox(height: 16),
+            FilledButton.icon(
+              key: const Key('retry-products'),
+              onPressed: _urunleriGetir,
+              icon: const Icon(Icons.refresh),
+              label: const Text('Yeniden dene'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildPillIcon() {
     return Transform.rotate(
       angle: 0.5,
@@ -463,180 +542,6 @@ class _HomeScreenState extends State<HomeScreen> {
             stops: const [0.5, 0.5],
           ),
         ),
-      ),
-    );
-  }
-}
-
-// Çalışan AI Asistan Ekranı (Chat UI)
-class AiBotScreen extends StatefulWidget {
-  const AiBotScreen({super.key});
-
-  @override
-  State<AiBotScreen> createState() => _AiBotScreenState();
-}
-
-class _AiBotScreenState extends State<AiBotScreen> {
-  final TextEditingController _controller = TextEditingController();
-  final List<Map<String, String>> _messages = [];
-  bool _isTyping = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _messages.add({
-      'sender': 'ai',
-      'text': 'Merhaba! Ben MediCheck AI. Dermokozmetik ve ilaç içerikleri hakkında size bilgi verebilirim. Ancak tıbbi tanı koyamam veya doz öneremem. Size nasıl yardımcı olabilirim?',
-    });
-  }
-
-  void _sendMessage() {
-    if (_controller.text.trim().isEmpty) return;
-
-    final userText = _controller.text.trim();
-    setState(() {
-      _messages.add({'sender': 'user', 'text': userText});
-      _isTyping = true;
-      _controller.clear();
-    });
-
-    Future.delayed(const Duration(seconds: 2), () {
-      if (!mounted) return;
-      setState(() {
-        _isTyping = false;
-        _messages.add({
-          'sender': 'ai',
-          'text': 'Bu bir demo yanıtıdır. Sistem şu anda güvenli modda çalışıyor. Sorduğunuz soruya dair ürün içeriklerini analiz edebilirim ancak sağlık durumunuzla ilgili kesin kararlar için lütfen bir doktora veya eczacıya danışın.'
-        });
-      });
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.grey[100],
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 1,
-        iconTheme: IconThemeData(color: Colors.purple[900]),
-        title: Row(
-          children: [
-            Icon(Icons.auto_awesome, color: Colors.purple[700]),
-            const SizedBox(width: 8),
-            Text(
-              'MediCheck Asistan',
-              style: TextStyle(
-                color: Colors.purple[900],
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
-        ),
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView.builder(
-              padding: const EdgeInsets.all(16),
-              itemCount: _messages.length,
-              itemBuilder: (context, index) {
-                final msg = _messages[index];
-                final isUser = msg['sender'] == 'user';
-                return Align(
-                  alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
-                  child: Container(
-                    margin: const EdgeInsets.only(bottom: 12),
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                    constraints: BoxConstraints(
-                      maxWidth: MediaQuery.of(context).size.width * 0.75,
-                    ),
-                    decoration: BoxDecoration(
-                      color: isUser ? Colors.purple[600] : Colors.white,
-                      borderRadius: BorderRadius.circular(16).copyWith(
-                        bottomRight: isUser ? const Radius.circular(0) : const Radius.circular(16),
-                        bottomLeft: !isUser ? const Radius.circular(0) : const Radius.circular(16),
-                      ),
-                      boxShadow: [
-                        if (!isUser)
-                          BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.05),
-                            blurRadius: 5,
-                            offset: const Offset(0, 2),
-                          ),
-                      ],
-                    ),
-                    child: Text(
-                      msg['text']!,
-                      style: TextStyle(
-                        color: isUser ? Colors.white : Colors.black87,
-                        fontSize: 15,
-                        height: 1.4,
-                      ),
-                    ),
-                  ),
-                );
-              },
-            ),
-          ),
-          if (_isTyping)
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'AI Asistan yanıtlıyor...',
-                  style: TextStyle(color: Colors.grey[600], fontStyle: FontStyle.italic),
-                ),
-              ),
-            ),
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.05),
-                  offset: const Offset(0, -2),
-                  blurRadius: 10,
-                ),
-              ],
-            ),
-            child: SafeArea(
-              child: Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: _controller,
-                      decoration: InputDecoration(
-                        hintText: 'Merak ettiğiniz bir şey sorun...',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(24),
-                          borderSide: BorderSide.none,
-                        ),
-                        filled: true,
-                        fillColor: Colors.grey[100],
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                      ),
-                      onSubmitted: (_) => _sendMessage(),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.purple[600],
-                      shape: BoxShape.circle,
-                    ),
-                    child: IconButton(
-                      icon: const Icon(Icons.send_rounded, color: Colors.white),
-                      onPressed: _sendMessage,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }
