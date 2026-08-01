@@ -27,18 +27,34 @@ void main() {
     },
   );
 
-  test('sunscreen dataset has structured comparison fields', () async {
-    final products = await ProductService.loadProducts();
-    final sunscreens = products
-        .where((product) => product.isSunscreen)
-        .toList();
+  test(
+    'sunscreen dataset has ten reviewed products and comparison fields',
+    () async {
+      final products = await ProductService.loadProducts();
+      final sunscreens = products
+          .where((product) => product.isSunscreen)
+          .toList();
 
-    expect(sunscreens, hasLength(5));
-    for (final sunscreen in sunscreens) {
-      expect(sunscreen.filterTypes, isNotEmpty);
-      expect(sunscreen.skinTypes, isNotEmpty);
-      expect(sunscreen.containsAlcohol, isNotNull);
-      expect(sunscreen.containsFragrance, isNotNull);
-    }
-  });
+      expect(products, hasLength(15));
+      expect(sunscreens, hasLength(10));
+      expect(sunscreens.map((product) => product.id).toSet(), hasLength(10));
+      for (final sunscreen in sunscreens) {
+        expect(sunscreen.filterTypes, isNotEmpty);
+        expect(sunscreen.skinTypes, isNotEmpty);
+        expect(sunscreen.hasReviewedSources, isTrue);
+        for (final source in sunscreen.sources) {
+          expect(Uri.parse(source.url).scheme, 'https');
+        }
+        final visibleText = [
+          sunscreen.description,
+          sunscreen.usageInstructions,
+          sunscreen.contraindications,
+          sunscreen.aiAnalysis,
+        ].join(' ').toLowerCase();
+        expect(visibleText, isNot(contains('tam koruma')));
+        expect(visibleText, isNot(contains('kesin güvenli')));
+        expect(visibleText, isNot(contains('risksiz')));
+      }
+    },
+  );
 }
