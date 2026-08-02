@@ -8,8 +8,8 @@
 
 | İsim | Rol |
 |---|---|
-| Pelin Yaşar | Scrum Master |
-| Irmak Gündüz | Product Owner |
+| Pelin Yaşar | Scrum Master / Acting Product Owner |
+| Irmak Gündüz | Product Owner (Sprint 1-2, Sprint 3’te ekipten ayrıldı) |
 | Seymen Budak | Developer |
 | Yusuf Emre Sucu | Developer |
 
