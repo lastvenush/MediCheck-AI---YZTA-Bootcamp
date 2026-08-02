@@ -2,7 +2,8 @@
 
 ## Takım Bilgileri
 
-**Takım Numarası:** 94
+**Takım Numarası:** 94  
+**Takım İsmi:** Team 94 - MediCheck AI
 
 ## Takım Rolleri
 
