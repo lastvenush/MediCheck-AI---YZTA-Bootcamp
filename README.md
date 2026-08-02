@@ -8,8 +8,8 @@
 
 | İsim | Rol |
 |---|---|
-| Pelin Yaşar | Scrum Master |
-| Irmak Gündüz | Product Owner |
+| Pelin Yaşar | Scrum Master / Acting Product Owner |
+| Irmak Gündüz | Product Owner (Sprint 1-2, Sprint 3’te ekipten ayrıldı) |
 | Seymen Budak | Developer |
 | Yusuf Emre Sucu | Developer |
 
@@ -690,4 +690,662 @@ Sprint 2 sonunda ürün, temel kullanıcı akışını gösteren çalışır bir
 - Final demo videosu için kullanıcı akışı netleştirilecek.
 
 ---
- 
+# Sprint 3
+
+## Sprint 3 Amacı
+
+Sprint 3’ün temel amacı, Sprint 2 sonunda hazırlanan Flutter demo uygulamasını final MVP seviyesine taşımak ve projenin temel kullanıcı akışlarını tamamlamaktır.
+
+Bu sprintte öncelik aşağıdaki çalışmalara verilmiştir:
+
+- Demo veri setinin 10 güneş kremi ve 5 ilaca genişletilmesi
+- Ürün ve ilaç bilgilerinin kaynaklandırılması
+- Sağlık ifadelerinin daha güvenli ve temkinli hale getirilmesi
+- Ürün karşılaştırma ekranının geliştirilmesi
+- AI soru-cevap asistanının tamamlanması
+- FastAPI backend’in hazırlanması
+- Gemini API entegrasyonunun gerçekleştirilmesi
+- Flutter uygulamasının FastAPI backend’e bağlanması
+- Ürün görsellerinin yerel dosyalara taşınması
+- Final test, analiz ve build kontrollerinin tamamlanması
+- Sprint 3 dokümantasyonu ve final demo materyallerinin hazırlanması
+
+Sprint 3 projenin son sprintidir. Bu nedenle kapsam, üç kişilik aktif ekip yapısı ve final teslim gereksinimleri dikkate alınarak düzenlenmiştir.
+
+---
+
+## Sprint 3 Teknik Kapsam Kararı
+Irmak Gündüz’ün Sprint 3 sürecinde ekipten ayrılmasının ardından takım üç aktif üyeyle çalışmaya devam etmiştir.
+
+Product Owner sorumlulukları, Scrum Master olan Pelin Yaşar tarafından devralınmıştır. Pelin Yaşar aynı zamanda Sprint 3’ün AI, backend, entegrasyon, veri, test ve teknik dokümantasyon çalışmalarının büyük bölümünü gerçekleştirmiştir.
+
+Sprint 3 aktif ekibi:
+
+| İsim | Sprint 3 Rolü |
+|---|---|
+| Pelin Yaşar | Scrum Master / Acting Product Owner / Lead Developer / AI, Backend & Integration |
+| Seymen Budak | Flutter Developer / Mobile UI Prototype |
+| Yusuf Emre Sucu | Data & Backend Prototype Support |
+
+Sprint kapsamında çalışan Flutter final MVP, ürün karşılaştırma ekranı, AI analiz ve soru-cevap akışı, genişletilmiş veri seti, FastAPI backend, Gemini entegrasyonu ve final kalite kontrollerine öncelik verilmiştir.
+
+Canlı PostgreSQL bağlantısı yerine veri modeli `schema.sql` dosyasıyla temsil edilmiştir.
+
+Favoriler, QR, profil, barkod/OCR, kullanıcı hesabı ve kişisel cilt profili özellikleri final MVP kapsamı dışında bırakılmıştır.
+
+---
+
+## Sprint 3 Backlog
+
+| Öncelik | Backlog Item | Açıklama | Durum |
+|---|---|---|---|
+| P0 | Sprint 3 rol güncellemesi | Üç kişilik aktif ekip yapısına göre rollerin yeniden düzenlenmesi | Tamamlandı |
+| P0 | Demo veri setinin genişletilmesi | Veri setinin 10 güneş kremi ve 5 ilaca çıkarılması | Tamamlandı |
+| P0 | Veri kaynaklarının eklenmesi | Ürün ve ilaç kayıtlarına kaynak bilgilerinin eklenmesi | Tamamlandı |
+| P0 | AI promptlarının finalleştirilmesi | Teşhis, tedavi, reçete ve doz önerisini engelleyen promptların hazırlanması | Tamamlandı |
+| P0 | AI güvenlik filtresi | Riskli sağlık sorularının güvenli yanıtlara yönlendirilmesi | Tamamlandı |
+| P0 | Sağlık dilinin düzenlenmesi | Kesin sağlık ifadelerinin temkinli hale getirilmesi | Tamamlandı |
+| P0 | AI asistan ekranı | Ürün ve ilaç bağlamlı soru-cevap akışının hazırlanması | Tamamlandı |
+| P0 | Ürün karşılaştırma ekranı | İki güneş kreminin karşılaştırılabilmesi | Tamamlandı |
+| P0 | AI karşılaştırma yorumu | Karşılaştırma ekranına güvenli AI yorumu eklenmesi | Tamamlandı |
+| P0 | Placeholder temizliği | Çalışmayan favori, QR ve profil kontrollerinin kaldırılması veya pasifleştirilmesi | Tamamlandı |
+| P0 | Görsel fallback | Görsel yüklenemediğinde yedek görünüm gösterilmesi | Tamamlandı |
+| P0 | Boş sonuç ekranı | Arama veya filtre sonucu bulunamadığında açıklayıcı mesaj gösterilmesi | Tamamlandı |
+| P0 | Yerel ürün görselleri | 10 güneş kremi ve 5 ilaç görselinin uygulamaya eklenmesi | Tamamlandı |
+| P0 | Tıbbi bilgilendirme ekranı | Uygulama başlangıcına sağlık uyarısı eklenmesi | Tamamlandı |
+| P0 | Flutter testleri | Model, servis, filtre, asistan ve kullanıcı akışlarının test edilmesi | Tamamlandı |
+| P0 | Flutter analiz kontrolü | `flutter analyze` sonucunun doğrulanması | Tamamlandı |
+| P0 | Flutter web build | Final web build’in oluşturulması | Tamamlandı |
+| P0 | Sprint 3 README | Sprint 3 sürecinin README’ye eklenmesi | Hazırlandı |
+| P0 | Sprint Board görseli | Güncel Sprint 3 Board ekran görüntüsünün eklenmesi | Teslim Öncesi Eklenecek |
+| P0 | Final ekran görüntüleri | Uygulamanın final ekran görüntülerinin eklenmesi | Teslim Öncesi Eklenecek |
+| P0 | Demo videosu | En fazla 3 dakikalık final demo videosunun hazırlanması | Teslim Öncesi Eklenecek |
+| P1 | FastAPI backend | Mobil uygulamanın kullanacağı backend servisinin hazırlanması | Tamamlandı |
+| P1 | `/health` endpointi | Backend servis durumunun döndürülmesi | Tamamlandı |
+| P1 | `/products` endpointi | 10 güneş kreminin listelenmesi | Tamamlandı |
+| P1 | `/products/{id}` endpointi | Tek bir güneş kreminin döndürülmesi | Tamamlandı |
+| P1 | `/medicines` endpointi | 5 ilacın listelenmesi | Tamamlandı |
+| P1 | `/medicines/{id}` endpointi | Tek bir ilacın döndürülmesi | Tamamlandı |
+| P1 | `/ai/analyze` endpointi | Ürün veya ilaç için yapılandırılmış analiz üretilmesi | Tamamlandı |
+| P1 | `/ai/ask` endpointi | Ürün bağlamlı güvenli AI cevabının döndürülmesi | Tamamlandı |
+| P1 | `/ai/compare-products` endpointi | İki güneş kremi için karşılaştırma cevabının döndürülmesi | Tamamlandı |
+| P1 | Gemini API entegrasyonu | Gemini servisinin FastAPI backend üzerinden bağlanması | Tamamlandı |
+| P1 | Gemini fallback sistemi | Gemini kullanılamadığında güvenli cevap üretilmesi | Tamamlandı |
+| P1 | Flutter–FastAPI bağlantısı | Flutter uygulamasının backend servislerine bağlanması | Tamamlandı |
+| P1 | Backend README | Backend kurulum ve çalıştırma komutlarının yazılması | Tamamlandı |
+| P1 | Swagger dokümantasyonu | Backend endpointlerinin Swagger üzerinden gösterilmesi | Tamamlandı |
+| P1 | PostgreSQL şeması | Kalıcı veri yapısı için `schema.sql` hazırlanması | Tamamlandı |
+| P1 | Backend testleri | API ve Gemini fallback davranışlarının test edilmesi | Tamamlandı |
+| Kapsam Dışı | Canlı PostgreSQL bağlantısı | Final MVP için zorunlu görülmediği için canlı bağlantının kurulmaması | Final MVP Kapsamı Dışında |
+| Kapsam Dışı | Favoriler | Kalıcı kullanıcı sistemi gerektirdiği için çıkarılması | Final MVP Kapsamı Dışında |
+| Kapsam Dışı | QR ve profil | Final demo akışında kullanılmadığı için çıkarılması | Final MVP Kapsamı Dışında |
+| Kapsam Dışı | Barkod/OCR | Sprint süresi nedeniyle çıkarılması | Final MVP Kapsamı Dışında |
+| Kapsam Dışı | Kullanıcı hesabı | Giriş ve kayıt sisteminin final MVP’ye alınmaması | Final MVP Kapsamı Dışında |
+
+---
+
+## Backlog Dağıtma Mantığı
+
+Sprint 3 backlog dağıtımı yapılırken öncelik, final demoda doğrudan gösterilebilecek ve ürünün ana kullanım senaryosunu tamamlayacak görevlere verilmiştir.
+
+Önceliklendirme sırasında aşağıdaki kriterler dikkate alınmıştır:
+
+- Sprint 3’ün projenin son sprinti olması
+- Aktif ekibin üç kişiden oluşması
+- Kullanıcının uygulamanın temel akışını baştan sona deneyimleyebilmesi
+- Yapay zekâ kullanımının final demoda görünür olması
+- Sağlık alanında güvenli ve bilgilendirici dil kullanılması
+- Çalışmayan veya yarım bırakılmış kullanıcı kontrolü bulunmaması
+- Ürün karşılaştırma özelliğinin tamamlanması
+- Flutter uygulamasının gerçek backend servisleriyle çalışabilmesi
+- Gemini API anahtarının mobil uygulamada bulunmaması
+- Gemini kullanılamadığında uygulamanın çalışmaya devam edebilmesi
+- Test, build ve dokümantasyon çıktılarının hazırlanması
+
+Bu nedenle kullanıcı hesapları, kalıcı favoriler, QR, profil, barkod/OCR ve canlı PostgreSQL bağlantısı gibi final demo için zorunlu olmayan özellikler kapsam dışında bırakılmıştır.
+
+---
+## Sprint 3 Görev Dağılımı
+
+Sprint 3 görev dağılımı, başlangıçta hazırlanan teknik planın yanı sıra Git commit geçmişinde görülen gerçek katkılar dikkate alınarak güncellenmiştir.
+
+### Pelin Yaşar — Scrum Master / Acting Product Owner / Lead Developer / AI, Backend & Integration
+
+Pelin Yaşar, Sprint 3 sürecinde Scrum Master ve Acting Product Owner görevlerinin yanı sıra final sistemin teknik geliştirme çalışmalarının büyük bölümünü gerçekleştirmiştir.
+
+#### Sprint Yönetimi ve Product Owner Çalışmaları
+
+- Irmak Gündüz’ün ekipten ayrılmasının ardından Product Owner görevlerini devraldı.
+- Sprint 3 kapsamını üç kişilik aktif ekip yapısına göre yeniden düzenledi.
+- Sprint görevlerinin P0, P1 ve kapsam dışı olarak önceliklendirilmesini sağladı.
+- Sprint 3 teknik planını ve görev durumlarını takip etti.
+- Final MVP kapsamına alınacak ve çıkarılacak özellikleri belirledi.
+- Ürün kararlarını, kabul kriterlerini ve final demo akışını kontrol etti.
+- Sprint 3 README, Sprint Review ve Sprint Retrospective içeriklerini hazırladı.
+- Proje analizini ve kalıcı teknik bağlamı `AGENTS.md` dosyasında dokümante etti.
+
+#### AI ve Gemini Çalışmaları
+
+- Güvenli AI promptlarını hazırladı ve final hale getirdi.
+- Teşhis, tedavi, reçete ve doz önerisini engelleyen güvenlik kurallarını geliştirdi.
+- AI güvenlik filtresini hazırladı.
+- Mock AI analiz cevaplarını final demo kalitesine getirdi.
+- Ürün ve ilaç bağlamlı AI asistan sistemini geliştirdi.
+- AI asistanın domain, data ve presentation katmanlarını oluşturdu.
+- Ürün karşılaştırması için mock ve remote AI servislerini geliştirdi.
+- AI analiz servisinin remote backend bağlantısını hazırladı.
+- Gemini API entegrasyonunu FastAPI backend üzerinden gerçekleştirdi.
+- Gemini model, token ve düşünme seviyesi yapılandırmasını ortam değişkenlerine taşıdı.
+- API anahtarının Flutter kaynak koduna ve GitHub reposuna eklenmesini engelledi.
+- Gemini hata, kota veya bağlantı problemlerinde devreye giren fallback sistemini geliştirdi.
+- AI analiz, soru-cevap ve karşılaştırma cevap modellerini hazırladı.
+- Gerçek Gemini bağlantısının çalışmasını test etti.
+
+#### Backend Çalışmaları
+
+- FastAPI backend’in final proje yapısını oluşturdu.
+- Backend uygulama ve AI servis katmanlarını hazırladı.
+- `/health` endpointini geliştirdi.
+- `/products` ve `/products/{id}` endpointlerini geliştirdi.
+- `/medicines` ve `/medicines/{id}` endpointlerini geliştirdi.
+- `/ai/analyze` endpointini geliştirdi.
+- `/ai/ask` endpointini geliştirdi.
+- `/ai/compare-products` endpointini geliştirdi.
+- API istek ve cevap modellerini hazırladı.
+- AI güvenlik kontrollerini backend’e bağladı.
+- CORS yapılandırmasını hazırladı.
+- `.env.example` dosyasını hazırladı.
+- Backend kurulum ve çalıştırma dokümantasyonunu hazırladı.
+- PostgreSQL veri modeli için `backend/schema.sql` dosyasını hazırladı.
+- Backend API ve Gemini servis testlerini geliştirdi.
+- Swagger ve OpenAPI rotalarını doğruladı.
+
+#### Flutter ve Entegrasyon Çalışmaları
+
+- Flutter uygulamasını FastAPI ürün ve ilaç endpointlerine bağladı.
+- Flutter AI servislerini remote backend yapısına bağladı.
+- Backend kullanılamadığında mock fallback servislerinin çalışmasını sağladı.
+- Final ürün karşılaştırma mimarisini oluşturdu.
+- AI asistan ekranını final servis yapısına bağladı.
+- Ana sayfa, ürün detay ekranı ve ürün servislerini backend yapısına uygun hale getirdi.
+- Sprint 3 veri setiyle uyumlu filtre servisini geliştirdi.
+- Arama ve kategori filtrelerinin genişletilmiş veri setiyle doğru çalışmasını sağladı.
+- Tıbbi bilgilendirme/onboarding ekranını geliştirdi.
+- Tıbbi bilgilendirme ekranını uygulamanın başlangıç akışına bağladı.
+- Ana sayfa ve ürün detay ekranındaki sağlık uyarılarını güncelledi.
+- Uygulama akışı ve onboarding widget testlerini hazırladı.
+- Android, iOS ve web proje yapılandırmalarını final proje yapısına uygun hale getirdi.
+- Kullanılmayan veya yinelenen eski dosyaları temizledi.
+
+#### Veri Seti ve Ürün Görselleri
+
+- Demo veri setini 10 güneş kremi ve 5 ilaç olacak şekilde final hale getirdi.
+- Ürün ve ilaç kayıtlarını ortak JSON veri yapısında birleştirdi.
+- Veri alanlarını Flutter modeli ve FastAPI endpointleriyle uyumlu hale getirdi.
+- Ürün ve ilaç bilgilerine kaynak ve referans alanları ekledi.
+- Kesin sağlık ifadelerini daha temkinli hale getirdi.
+- Veri seti için otomatik testler hazırladı.
+- 10 güneş kremi ve 5 ilaç için kaliteli yerel ürün görsellerini buldu ve projeye ekledi.
+- Ürün verilerindeki görsel yollarını yerel asset dosyalarına yönlendirdi.
+- Ortak `ProductImage` bileşenini geliştirdi.
+- Ürün kartı ve detay ekranlarını yerel görselleri kullanacak şekilde güncelledi.
+- Yerel ve internet tabanlı görseller için fallback desteği ekledi.
+- Görsel kaynaklarını `IMAGE_SOURCES.md` dosyasında dokümante etti.
+- `pubspec.yaml` dosyasına ürün görselleri asset yolunu ekledi.
+
+#### Test, QA ve Repo Düzenleme Çalışmaları
+
+- Flutter model, servis, filtre, AI, karşılaştırma ve uygulama akışı testlerini hazırladı.
+- Backend endpoint ve Gemini servis testlerini hazırladı.
+- `flutter analyze` kontrolünü gerçekleştirdi.
+- Flutter testlerini çalıştırdı ve 34 testin başarılı olduğunu doğruladı.
+- Backend testlerini çalıştırdı ve 14 testin başarılı olduğunu doğruladı.
+- Flutter web build’i başarıyla oluşturdu.
+- WebAssembly uyumluluk kontrolünü gerçekleştirdi.
+- Backend sağlık, ürün, ilaç ve AI endpointlerini doğruladı.
+- Gemini entegrasyonu ve fallback davranışını doğruladı.
+- Repository içindeki geçici ve yinelenen dosyaları temizledi.
+- `.gitignore` dosyasını hazırladı ve gizli dosyaların repository’ye eklenmesini engelledi.
+- Sprint 3 değişikliklerini ayrı bir entegrasyon dalında birleştirerek Pull Request üzerinden `main` dalına aktardı.
+- Ürün görsellerini ayrı bir commit ile GitHub’a gönderdi.
+- README güncellemelerini GitHub üzerinden gerçekleştirdi.
+
+> Git geçmişinde Pelin Yaşar’ın Sprint 3 kapsamında AI, Gemini, FastAPI, veri seti, Flutter-backend bağlantısı, filtreler, onboarding, testler, proje düzenleme, yerel ürün görselleri ve README çalışmalarını içeren çok sayıda commit’i bulunmaktadır. Final teknik sistemin büyük bölümü Pelin Yaşar tarafından tamamlanmıştır.
+
+### Seymen Budak — Flutter Developer / Mobile UI Prototype
+
+Seymen Budak, Sprint 3’ün başlangıcında mobil kullanıcı arayüzü ve demo akışı için ilk Flutter prototipini hazırlamıştır.
+
+- İlk ürün karşılaştırma ekranı prototipini geliştirdi.
+- Ana sayfada karşılaştırma akışı için ilk kullanıcı arayüzünü hazırladı.
+- Ürün detay ekranının Sprint 3 arayüz düzenlemelerine katkı sağladı.
+- AI sohbet alanının ilk mobil arayüz yapısına katkı sağladı.
+- Ürün kartlarının görsel düzenini güncelledi.
+- Görsel yükleme hataları için ilk fallback korumasını ekledi.
+- Ana sayfa ve ürün detay ekranında kullanıcı arayüzü temizliği yaptı.
+- Flutter bağımlılık ve Android yapılandırma dosyalarında gerekli düzenlemelere katkı sağladı.
+  
+> Seymen Budak’ın Sprint 3 katkıları `b1c571b` numaralı commit’te görünmektedir. Bu commit, karşılaştırma ekranının ve AI sohbet arayüzünün ilk prototipini içermektedir. Final karşılaştırma mimarisi, backend bağlantısı, AI servisleri ve testler daha sonra Pelin Yaşar tarafından geliştirilerek projeye entegre edilmiştir.
+
+### Yusuf Emre Sucu — Data & Backend Prototype Support
+
+Yusuf Emre Sucu, Sprint 3’ün başlangıcında veri ve backend için kullanılabilecek taslak dosyaları hazırlayarak projeye destek olmuştur.
+
+- İlaçlar için taslak JSON veri dosyası hazırladı.
+- Güneş kremleri için taslak JSON veri dosyası hazırladı.
+- Genişletilmiş ürün verilerini içeren taslak veri dosyası hazırladı.
+- Backend için kullanılabilecek ilk Python prototip dosyasını hazırladı.
+- 10 güneş kremi ve 5 ilaç hedefi için ham veri desteği sağladı.
+- Backend ve veri yapısının hazırlanmasına başlangıç materyali sundu.
+
+> Yusuf Emre Sucu’nun Sprint 3 katkıları `be42d7e` ve `38fcad4` numaralı commitlerde görünmektedir. Bu commitlerde `medicinesjson.json`, `productsjson.json`, `finalproducts.json` ve `newmain.py` dosyaları bulunmaktadır. Bu taslak dosyalar daha sonra Pelin Yaşar tarafından incelenmiş, ortak veri modeline dönüştürülmüş, kaynaklandırılmış, test edilmiş ve final FastAPI/Flutter yapısına entegre edilmiştir. Entegrasyon tamamlandıktan sonra bağımsız taslak dosyalar repository’den kaldırılmıştır.
+
+> Not: Irmak Gündüz Sprint 3 sürecinde ekipten ayrıldığı için Sprint 3 görev dağılımında aktif ekip üyesi olarak yer almamaktadır.
+
+---
+## Daily Scrum Notları
+
+### Daily Scrum 1
+
+**Katılımcılar:** Pelin Yaşar, Seymen Budak, Yusuf Emre Sucu
+
+- Sprint 3 teknik planı değerlendirildi.
+- Irmak Gündüz’ün ekipten ayrılmasının ardından takım rolleri güncellendi.
+- Product Owner ve Scrum Master sorumluluklarının Pelin Yaşar tarafından birlikte yürütülmesine karar verildi.
+- Sprint 3 kapsamı P0, P1 ve final MVP kapsamı dışındaki özellikler olarak ayrıldı.
+- Veri seti, AI asistan, ürün karşılaştırma ve backend çalışmalarına öncelik verilmesi kararlaştırıldı.
+
+### Daily Scrum 2
+
+**Katılımcılar:** Pelin Yaşar, Seymen Budak, Yusuf Emre Sucu
+
+- Seymen Budak’ın hazırladığı ilk karşılaştırma ve AI sohbet arayüzü değerlendirildi.
+- Yusuf Emre Sucu’nun yüklediği taslak ürün, ilaç ve backend dosyaları incelendi.
+- Taslak verilerin tek bir ortak veri dosyasında birleştirilmesine karar verildi.
+- Pelin Yaşar, AI güvenlik yapısı, Gemini entegrasyonu ve final backend mimarisi üzerinde çalışmaya başladı.
+- API anahtarının yalnızca backend ortam değişkenlerinde tutulmasına karar verildi.
+
+### Daily Scrum 3
+
+**Katılımcılar:** Pelin Yaşar, Seymen Budak, Yusuf Emre Sucu
+
+- Pelin Yaşar tarafından FastAPI backend ve AI servisleri geliştirildi.
+- Ürün ve ilaç endpointleri ortak veri dosyasına bağlandı.
+- Flutter uygulaması FastAPI backend’e bağlandı.
+- AI asistan ve karşılaştırma servisleri final mimariye taşındı.
+- Veri seti 10 güneş kremi ve 5 ilaç olacak şekilde kaynaklandırıldı.
+- Sağlık ifadeleri ve AI cevapları güvenli hale getirildi.
+
+### Daily Scrum 4
+
+**Katılımcılar:** Pelin Yaşar, Seymen Budak, Yusuf Emre Sucu
+
+- Pelin Yaşar tarafından filtre servisi ve tıbbi bilgilendirme ekranı tamamlandı.
+- Flutter ve backend testleri çalıştırıldı.
+- Final web build doğrulandı.
+- 15 yerel ürün görseli projeye eklendi.
+- Görsel kaynakları dokümante edildi.
+- Final kullanıcı akışı kontrol edildi.
+- Sprint Board görseli, final ekran görüntüleri ve demo videosunun teslim öncesinde eklenmesi kararlaştırıldı.
+
+---
+
+## Sprint Board Updates
+
+### Tamamlanan Görevler
+
+- Sprint 3 rol dağılımı güncellendi.
+- Demo veri seti 10 güneş kremi ve 5 ilaca genişletildi.
+- Ürün ve ilaç bilgileri kaynaklandırıldı.
+- Sağlık ifadeleri daha güvenli hale getirildi.
+- AI promptları final hale getirildi.
+- AI güvenlik filtresi geliştirildi.
+- AI soru-cevap asistanı tamamlandı.
+- Ürün karşılaştırma ekranı tamamlandı.
+- AI karşılaştırma yorumu eklendi.
+- Çalışmayan placeholder kontroller kaldırıldı veya pasifleştirildi.
+- Görsel fallback sistemi eklendi.
+- Boş sonuç ekranları düzenlendi.
+- Tıbbi bilgilendirme ekranı eklendi.
+- FastAPI backend tamamlandı.
+- Ürün, ilaç ve AI endpointleri geliştirildi.
+- Gemini API backend üzerinden entegre edildi.
+- Gemini fallback sistemi hazırlandı.
+- Flutter uygulaması FastAPI backend’e bağlandı.
+- PostgreSQL `schema.sql` dosyası hazırlandı.
+- Backend dokümantasyonu hazırlandı.
+- Flutter ve backend testleri tamamlandı.
+- Flutter web build başarıyla oluşturuldu.
+- 10 güneş kremi ve 5 ilaç için yerel görseller eklendi.
+- Görsel kaynakları dokümante edildi.
+- Repository içindeki geçici ve yinelenen dosyalar temizlendi.
+- Sprint 3 README bölümü hazırlandı.
+- Sprint Review hazırlandı.
+- Sprint Retrospective hazırlandı.
+
+### Teslim Öncesinde Eklenecekler
+
+- Sprint 3 Board ekran görüntüsü
+- Final uygulama ekran görüntüleri
+- Swagger ekran görüntüsü
+- En fazla 3 dakikalık final demo videosu
+- Demo videosunun README bağlantısı
+
+### Final MVP Kapsamı Dışında Bırakılanlar
+
+- Canlı PostgreSQL bağlantısı
+- SQLAlchemy ve Alembic migration yapısı
+- Kullanıcı giriş ve kayıt sistemi
+- Kalıcı favoriler
+- QR özelliği
+- Profil özelliği
+- Barkod/OCR özelliği
+- Kişisel cilt profili
+
+### Sprint Board Görseli
+
+<!-- Sprint 3 Board ekran görüntüsü hazırlandıktan sonra aşağıdaki satır aktif hale getirilecektir. -->
+
+<!-- ![Sprint 3 Board](./images/sprint-board-3.png) -->
+
+---
+
+## Ürün Durumu
+
+Sprint 3 sonunda MediCheck AI, Flutter mobil uygulaması, FastAPI backend’i ve Gemini destekli yapay zekâ servisleri bulunan çalışır bir final MVP haline getirilmiştir.
+
+### Tamamlanan Ürün Çıktıları
+
+- 10 güneş kremi ve 5 ilaçtan oluşan kaynaklı veri seti hazırlandı.
+- Ürün arama ve kategori filtreleme özellikleri güncellendi.
+- Ürün detay ekranları tamamlandı.
+- İki güneş kreminin karşılaştırılabildiği ekran tamamlandı.
+- AI karşılaştırma yorumu eklendi.
+- Ürün ve ilaç bağlamlı AI asistan tamamlandı.
+- Tıbbi bilgilendirme ekranı eklendi.
+- Sağlık güvenlik filtreleri geliştirildi.
+- FastAPI backend tamamlandı.
+- Ürün, ilaç ve AI endpointleri oluşturuldu.
+- Flutter uygulaması backend servislerine bağlandı.
+- Gemini API entegrasyonu tamamlandı.
+- Gemini fallback sistemi eklendi.
+- PostgreSQL veri şeması hazırlandı.
+- Çalışmayan placeholder kontroller kaldırıldı veya pasifleştirildi.
+- 15 yerel ürün görseli uygulamaya eklendi.
+- Görsel fallback mekanizması geliştirildi.
+- Flutter ve backend testleri başarıyla tamamlandı.
+- Flutter web build başarıyla oluşturuldu.
+
+### Sprint 3 Ürünleri
+
+#### Güneş Kremleri
+
+1. La Roche-Posay Anthelios UVMune 400 Fluid
+2. Bioderma Photoderm Max Aquafluide
+3. Eucerin Sun Oil Control Dry Touch
+4. Vichy Capital Soleil UV-Age Daily
+5. Avène Mineral Sunscreen Multi-Defense Fluid SPF50+
+6. Vichy Capital Soleil UV-Clear SPF50+
+7. Bioderma Photoderm AR SPF50+
+8. Bioderma Photoderm Spot SPF50+
+9. Bioderma Photoderm Cream SPF50+
+10. Bioderma Photoderm Spot-Age SPF50+
+
+#### İlaçlar
+
+1. Bayer Aspirin 500 mg Tablet
+2. Menarini Arveles 25 mg Film Tablet
+3. Atabay Parol 500 mg Tablet
+4. UCB Zyrtec 10 mg Film Kaplı Tablet
+5. Buscopan 10 mg Kaplı Tablet
+
+### Yerel Ürün Görselleri
+
+Ürün görselleri aşağıdaki dizine eklenmiştir:
+
+```text
+medicheck_ai_flutter/assets/images/products/
+```
+
+Görsel kaynakları aşağıdaki dosyada dokümante edilmiştir:
+
+```text
+medicheck_ai_flutter/assets/IMAGE_SOURCES.md
+```
+
+> Ürün görsellerinin ticari kullanım ve telif koşulları, uygulamanın herkese açık olarak yayımlanmasından önce ayrıca kontrol edilmelidir.
+
+### Ürün Ekran Görüntüleri
+
+<!-- ![Sprint 3 Ana Sayfa](./images/sprint3-home.png) -->
+
+<!-- ![Sprint 3 Ürün Detay](./images/sprint3-product-detail.png) -->
+
+<!-- ![Sprint 3 AI Asistan](./images/sprint3-ai-assistant.png) -->
+
+<!-- ![Sprint 3 Ürün Karşılaştırma](./images/sprint3-comparison.png) -->
+
+<!-- ![Sprint 3 Swagger](./images/sprint3-swagger.png) -->
+
+---
+
+## Kullanıcı Hikâyeleri ve Kabul Kriterleri
+
+### Kullanıcı Hikâyesi 1: Ürün Kataloğu
+
+**Kullanıcı olarak**, güneş kremlerini ve ilaçları liste halinde görmek istiyorum, böylece incelemek istediğim ürüne ulaşabilirim.
+
+**Kabul Kriterleri:**
+
+- Katalogda 10 güneş kremi ve 5 ilaç bulunmalıdır.
+- Kullanıcı ürün adına göre arama yapabilmelidir.
+- Kullanıcı ürünleri kategoriye göre filtreleyebilmelidir.
+- Her ürün kartında ürün adı, marka ve görsel bulunmalıdır.
+- Boş sonuç durumunda açıklayıcı mesaj gösterilmelidir.
+- Görsel yüklenemediğinde uygulama çökmemelidir.
+
+### Kullanıcı Hikâyesi 2: Ürün Detayı
+
+**Kullanıcı olarak**, seçtiğim ürünün detaylarını görmek istiyorum, böylece ürün bilgilerini daha anlaşılır şekilde inceleyebilirim.
+
+**Kabul Kriterleri:**
+
+- Kullanıcı ürün kartından detay ekranına ulaşabilmelidir.
+- Ürün adı, marka, açıklama ve kaynak bilgileri gösterilmelidir.
+- Güneş kremleri için filtre ve cilt tipi bilgileri gösterilmelidir.
+- İlaçlar için sadeleştirilmiş prospektüs ve uyarı bilgileri gösterilmelidir.
+- Kesin sağlık ve güvenlik ifadeleri kullanılmamalıdır.
+- Doktor veya eczacıya danışma uyarısı gösterilmelidir.
+
+### Kullanıcı Hikâyesi 3: AI Asistan
+
+**Kullanıcı olarak**, seçtiğim ürün veya ilaç hakkında AI asistana soru sormak istiyorum, böylece ürün bilgisini daha kolay anlayabilirim.
+
+**Kabul Kriterleri:**
+
+- Kullanıcı bir ürün veya ilaç seçebilmelidir.
+- Kullanıcı seçilen ürün hakkında soru sorabilmelidir.
+- AI cevabı ürün bağlamıyla hazırlanmalıdır.
+- AI teşhis, tedavi, reçete veya doz önerisi vermemelidir.
+- Riskli sağlık sorularında profesyonel sağlık desteğine yönlendirme yapılmalıdır.
+- Loading, error ve retry durumları gösterilmelidir.
+- Gemini kullanılamadığında güvenli fallback cevabı verilmelidir.
+
+### Kullanıcı Hikâyesi 4: Ürün Karşılaştırma
+
+**Kullanıcı olarak**, iki güneş kremini yan yana karşılaştırmak istiyorum, böylece ürünler arasındaki farkları görebilirim.
+
+**Kabul Kriterleri:**
+
+- Kullanıcı iki farklı güneş kremi seçebilmelidir.
+- Aynı ürün iki kez seçilememelidir.
+- Ürünlerin temel özellikleri yan yana gösterilmelidir.
+- Karşılaştırma ekranında AI yorumu bulunmalıdır.
+- AI yorumu tarafsız ve bilgilendirici olmalıdır.
+- Bir ürün herkes için kesin olarak daha iyi ilan edilmemelidir.
+
+### Kullanıcı Hikâyesi 5: Tıbbi Bilgilendirme
+
+**Kullanıcı olarak**, uygulamanın sağlık bilgilerinin sınırlarını görmek istiyorum, böylece uygulamanın tıbbi tavsiye vermediğini anlayabilirim.
+
+**Kabul Kriterleri:**
+
+- Uygulama başlangıcında tıbbi bilgilendirme gösterilmelidir.
+- Uygulamanın teşhis, tedavi, reçete veya doz önerisi sunmadığı belirtilmelidir.
+- İlaç kararları için doktor veya eczacıya danışılması gerektiği belirtilmelidir.
+- Kullanıcı bilgilendirmeyi gördükten sonra uygulamaya devam edebilmelidir.
+
+---
+
+## Test ve QA Notları
+
+### Çalıştırılan Kontroller
+
+```bash
+flutter analyze --no-pub
+flutter test --no-pub
+flutter build web --no-pub
+python3 -m unittest discover -s backend/tests -v
+```
+
+### Sonuçlar
+
+| Kontrol | Sonuç |
+|---|---|
+| Flutter Analyze | Hatasız |
+| Flutter Test | 34/34 Başarılı |
+| Backend Test | 14/14 Başarılı |
+| Flutter Web Build | Başarılı |
+| WebAssembly Uyumluluk Kontrolü | Başarılı |
+| Ana Sayfa | Başarılı |
+| Ürün Listesi | Başarılı |
+| Arama ve Filtreleme | Başarılı |
+| Ürün Detay Ekranı | Başarılı |
+| İlaç Detay Ekranı | Başarılı |
+| AI Analiz | Başarılı |
+| AI Asistan | Başarılı |
+| Ürün Karşılaştırma | Başarılı |
+| Görsel Fallback | Başarılı |
+| Backend Endpointleri | Başarılı |
+| Gemini Entegrasyonu | Başarılı |
+| Gemini Fallback | Başarılı |
+| Bozuk Placeholder Kontrolü | Bulunmuyor |
+| Conflict Durumu | Yok |
+
+### Test Kapsamı
+
+- Ürün modeli JSON dönüşümü
+- Veri setindeki ürün ve ilaç sayıları
+- Veri kaynaklarının kontrolü
+- Ürün arama ve kategori filtreleme
+- Boş sonuç davranışı
+- Ürün servisinin veri yükleme davranışı
+- AI sonuç modeli
+- Güvenli AI prompt kuralları
+- Riskli sağlık sorularının filtrelenmesi
+- Mock ve remote AI servisleri
+- AI asistan ekranı
+- Ürün karşılaştırma ekranı
+- Loading, success, error ve retry durumları
+- Tıbbi bilgilendirme ekranı
+- Ana sayfa kullanıcı akışı
+- Flutter–FastAPI bağlantısı
+- Backend sağlık kontrolü
+- Ürün ve ilaç endpointleri
+- AI analiz, asistan ve karşılaştırma endpointleri
+- Gemini yapılandırması
+- Gemini hata ve fallback davranışı
+- Swagger ve OpenAPI rotaları
+
+---
+
+## Final Demo Video Akışı
+
+1. Uygulama açılır.
+2. Tıbbi bilgilendirme ekranı gösterilir.
+3. Ana sayfadaki ürünler görüntülenir.
+4. Kullanıcı bir güneş kremi arar.
+5. Ürün detay ekranı açılır.
+6. Ürün bilgileri ve AI analiz kartı gösterilir.
+7. Kullanıcı ikinci bir güneş kremi seçer.
+8. Ürün karşılaştırma ekranı gösterilir.
+9. AI karşılaştırma yorumu gösterilir.
+10. Kullanıcı bir ilaç detayını açar.
+11. AI asistana ürün veya ilaç hakkında soru sorulur.
+12. Uygulamanın tıbbi tavsiye vermediği tekrar belirtilir.
+
+### Demo Videosu
+
+**Demo videosu:** Teslim öncesinde eklenecek.
+
+---
+
+## Sprint Review
+
+Sprint 3 sonunda:
+
+- Aktif takım yapısı üç kişi olarak güncellendi.
+- Product Owner sorumlulukları Pelin Yaşar tarafından devralındı.
+- Sprint 3 teknik geliştirme çalışmalarının büyük bölümü Pelin Yaşar tarafından tamamlandı.
+- Demo veri seti 10 güneş kremi ve 5 ilaca genişletildi.
+- Ürün ve ilaç bilgileri kaynaklandırıldı.
+- Sağlık ifadeleri güvenli hale getirildi.
+- AI promptları ve güvenlik filtresi tamamlandı.
+- AI asistan geliştirildi.
+- Ürün karşılaştırma ekranı geliştirildi.
+- FastAPI backend tamamlandı.
+- Ürün, ilaç ve AI endpointleri geliştirildi.
+- Gemini API backend üzerinden entegre edildi.
+- Flutter uygulaması backend servislerine bağlandı.
+- Gemini fallback sistemi hazırlandı.
+- PostgreSQL veri şeması oluşturuldu.
+- Tıbbi bilgilendirme ekranı eklendi.
+- Çalışmayan placeholder kontroller kaldırıldı veya pasifleştirildi.
+- Yerel ürün görselleri eklendi.
+- Görsel kaynakları dokümante edildi.
+- Flutter ve backend testleri başarıyla tamamlandı.
+- Flutter web build başarıyla oluşturuldu.
+
+Sprint 3 sonunda MediCheck AI, final demo sırasında temel kullanıcı senaryoları gösterilebilen ve yapay zekâ kullanımını görünür hale getiren çalışır bir MVP haline getirilmiştir.
+
+---
+
+## Sprint Retrospective
+
+### İyi Gidenler
+
+- Ekip yapısındaki değişikliğe rağmen Sprint 3 kapsamı yeniden planlandı.
+- Product Owner ve Scrum Master sorumlulukları kesintisiz yürütüldü.
+- Proje gerçek FastAPI ve Gemini entegrasyonuna taşındı.
+- Veri seti 10 güneş kremi ve 5 ilaca genişletildi.
+- AI asistan ve ürün karşılaştırma akışları tamamlandı.
+- Sağlık güvenlik kuralları geliştirildi.
+- API anahtarı mobil uygulamaya gömülmeden güvenli şekilde yönetildi.
+- Gemini kullanılamadığında uygulamanın çalışmaya devam etmesi sağlandı.
+- Yerel ürün görselleri uygulamaya eklendi.
+- Flutter ve backend testleri başarıyla tamamlandı.
+- Final web build başarıyla oluşturuldu.
+
+### Zorlanılan Noktalar
+
+- Irmak Gündüz’ün ekipten ayrılması görev dağılımının yeniden yapılmasını gerektirdi.
+- Pelin Yaşar’ın Scrum Master, Acting Product Owner ve Lead Developer görevlerini birlikte yürütmesi iş yükünü artırdı.
+- Sprint 3 teknik geliştirmelerinin büyük bölümü Pelin Yaşar tarafından tamamlandı.
+- Takım üyelerinin hazırladığı ilk çalışmaların final mimariye dönüştürülmesi ek entegrasyon gerektirdi.
+- Flutter, FastAPI ve Gemini katmanlarının birlikte geliştirilmesi teknik koordinasyon gerektirdi.
+- Canlı PostgreSQL bağlantısı final sprint süresi içinde tamamlanamadı.
+- Sprint Board ve final görselleri teknik geliştirmeden sonraya kaldı.
+
+## Sprint 3 Sonucu
+
+Sprint 3 sonunda MediCheck AI; 10 güneş kremi ve 5 ilaç içeren kaynaklı veri setine, yerel ürün görsellerine, ürün detay ekranlarına, ürün karşılaştırma özelliğine, güvenli AI soru-cevap asistanına, FastAPI backend’e ve Gemini API entegrasyonuna sahip çalışır bir final MVP haline getirilmiştir.
+
+Sprint 3 teknik geliştirme çalışmalarının büyük bölümü Pelin Yaşar tarafından gerçekleştirilmiştir. Seymen Budak, Flutter karşılaştırma ve AI sohbet arayüzünün ilk prototipine katkı sağlamıştır. Yusuf Emre Sucu ise taslak ürün, ilaç ve backend dosyalarıyla veri ve backend başlangıç desteği sağlamıştır.
+
+Flutter uygulaması ve FastAPI backend testlerle doğrulanmış, web build başarıyla oluşturulmuş ve Gemini servisinin kullanılamadığı durumlarda sistemin güvenli fallback cevaplarıyla çalışmaya devam etmesi sağlanmıştır.
+
+Canlı PostgreSQL bağlantısı, kullanıcı hesapları, favoriler, QR, profil ve barkod/OCR özellikleri final MVP kapsamı dışında bırakılmıştır.
+
+Final teslim için Sprint Board görseli, uygulama ekran görüntüleri, Swagger ekran görüntüsü ve en fazla 3 dakikalık demo videosu README’ye eklenecektir.
+
+

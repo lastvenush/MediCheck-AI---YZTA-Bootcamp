@@ -101,20 +101,170 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   }
 }
 
-class _ProductDetailContent extends StatelessWidget {
+class _CompareBottomSheet extends StatefulWidget {
+  const _CompareBottomSheet({required this.digerUrunler, required this.product});
+
+  final List<Product> digerUrunler;
+  final Product product;
+
+  @override
+  State<_CompareBottomSheet> createState() => _CompareBottomSheetState();
+}
+
+class _CompareBottomSheetState extends State<_CompareBottomSheet> {
+  String aramaMetni = '';
+
+  @override
+  Widget build(BuildContext context) {
+    final filtrelenmisList = widget.digerUrunler.where((u) {
+      return u.name.toLowerCase().contains(aramaMetni.toLowerCase()) ||
+          u.brand.toLowerCase().contains(aramaMetni.toLowerCase());
+    }).toList();
+
+    return Padding(
+      padding: EdgeInsets.only(
+        bottom: MediaQuery.viewInsetsOf(context).bottom,
+        left: 20,
+        right: 20,
+        top: 16,
+      ),
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          maxHeight: MediaQuery.sizeOf(context).height * 0.7,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 40,
+              height: 5,
+              decoration: BoxDecoration(
+                color: Colors.grey[300],
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+            const SizedBox(height: 20),
+            Row(
+              children: [
+                Icon(Icons.compare_arrows, color: Colors.purple[700]),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    'Karşılaştırılacak Ürünü Seçin',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.purple[900],
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              onChanged: (deger) => setState(() => aramaMetni = deger),
+              decoration: InputDecoration(
+                hintText: 'Ürün veya marka ara...',
+                prefixIcon: const Icon(Icons.search),
+                filled: true,
+                fillColor: Colors.grey[100],
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide.none,
+                ),
+                contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              ),
+            ),
+            const SizedBox(height: 12),
+            Flexible(
+              child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: filtrelenmisList.length,
+                itemBuilder: (context, index) {
+                  final digerUrun = filtrelenmisList[index];
+                  return Card(
+                    elevation: 0,
+                    color: Colors.grey[50],
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      side: BorderSide(color: Colors.grey[200]!),
+                    ),
+                    margin: const EdgeInsets.only(bottom: 8),
+                    child: ListTile(
+                      leading: CircleAvatar(
+                        backgroundColor: Colors.amber[50],
+                        child: Icon(
+                          Icons.wb_sunny,
+                          color: Colors.amber[400],
+                          size: 20,
+                        ),
+                      ),
+                      title: Text(
+                        digerUrun.name,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                        ),
+                      ),
+                      subtitle: Text(
+                        digerUrun.brand,
+                        style: const TextStyle(fontSize: 12),
+                      ),
+                      trailing: Icon(
+                        Icons.arrow_forward_ios,
+                        size: 14,
+                        color: Colors.purple[300],
+                      ),
+                      onTap: () {
+                        Navigator.pop(context);
+                        context.push('/compare', extra: [widget.product, digerUrun]);
+                      },
+                    ),
+                  );
+                },
+              ),
+            ),
+            const SizedBox(height: 10),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _ProductDetailContent extends StatefulWidget {
   const _ProductDetailContent({
     required this.product,
     required this.tumUrunler,
   });
 
-  static final _aiAnalysisService = RemoteAiAnalysisService();
-
   final Product product;
   final List<Product> tumUrunler;
 
+  @override
+  State<_ProductDetailContent> createState() => _ProductDetailContentState();
+}
+
+class _ProductDetailContentState extends State<_ProductDetailContent> {
+  static final _aiAnalysisService = RemoteAiAnalysisService();
+  String? seciliFiltreAciklamasi;
+
+  String? _getFilterExplanation(String filter) {
+    final lower = filter.toLowerCase();
+    if (lower.contains('kimyasal')) {
+      return 'Cilt tarafından emilerek zararlı UV ışınlarını zararsız ısıya dönüştürür. Dokusu genellikle daha hafiftir.';
+    } else if (lower.contains('mineral') || lower.contains('fiziksel')) {
+      return 'Cilt yüzeyinde koruyucu bir bariyer oluşturarak UV ışınlarını ayna gibi dışarı yansıtır.';
+    } else if (lower.contains('hibrit')) {
+      return 'Hem kimyasal hem de mineral filtrelerin özelliklerini bir arada sunar.';
+    }
+    return null;
+  }
+
   void _karsilastirmaMenusuGoster(BuildContext context) {
-    final digerUrunler = tumUrunler
-        .where((u) => u.isSunscreen && u.id != product.id)
+    final digerUrunler = widget.tumUrunler
+        .where((u) => u.isSunscreen && u.id != widget.product.id)
         .toList();
 
     showModalBottomSheet(
@@ -124,95 +274,13 @@ class _ProductDetailContent extends StatelessWidget {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
-      builder: (context) {
-        return SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  width: 40,
-                  height: 5,
-                  decoration: BoxDecoration(
-                    color: Colors.grey[300],
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-                const SizedBox(height: 20),
-                Row(
-                  children: [
-                    Icon(Icons.compare_arrows, color: Colors.purple[700]),
-                    const SizedBox(width: 8),
-                    Text(
-                      'Karşılaştırılacak Ürünü Seçin',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.purple[900],
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                ListView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: digerUrunler.length,
-                  itemBuilder: (context, index) {
-                    final digerUrun = digerUrunler[index];
-                    return Card(
-                      elevation: 0,
-                      color: Colors.grey[50],
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        side: BorderSide(color: Colors.grey[200]!),
-                      ),
-                      margin: const EdgeInsets.only(bottom: 8),
-                      child: ListTile(
-                        leading: CircleAvatar(
-                          backgroundColor: Colors.amber[50],
-                          child: Icon(
-                            Icons.wb_sunny,
-                            color: Colors.amber[400],
-                            size: 20,
-                          ),
-                        ),
-                        title: Text(
-                          digerUrun.name,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 14,
-                          ),
-                        ),
-                        subtitle: Text(
-                          digerUrun.brand,
-                          style: const TextStyle(fontSize: 12),
-                        ),
-                        trailing: Icon(
-                          Icons.arrow_forward_ios,
-                          size: 14,
-                          color: Colors.purple[300],
-                        ),
-                        onTap: () {
-                          Navigator.pop(context);
-                          context.push('/compare', extra: [product, digerUrun]);
-                        },
-                      ),
-                    );
-                  },
-                ),
-                const SizedBox(height: 10),
-              ],
-            ),
-          ),
-        );
-      },
+      builder: (context) => _CompareBottomSheet(digerUrunler: digerUrunler, product: widget.product),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    final product = widget.product;
     final isIlac = product.isMedicine;
     final sec1Title = isIlac ? 'Kullanım Şekli' : 'Cilt Tipi Uyumluluğu';
     final sec1Icon = isIlac
@@ -229,6 +297,8 @@ class _ProductDetailContent extends StatelessWidget {
       backgroundColor: Colors.grey[50],
       appBar: AppBar(
         backgroundColor: Colors.grey[50],
+        scrolledUnderElevation: 0,
+        surfaceTintColor: Colors.transparent,
         elevation: 0,
         iconTheme: IconThemeData(color: Colors.blue[900]),
         title: Text(
@@ -240,7 +310,12 @@ class _ProductDetailContent extends StatelessWidget {
         ),
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
+        padding: EdgeInsets.only(
+          left: 20,
+          right: 20,
+          top: 20,
+          bottom: MediaQuery.paddingOf(context).bottom + 40,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -418,18 +493,63 @@ class _ProductDetailContent extends StatelessWidget {
               runSpacing: 8,
               children: product.primaryIngredients
                   .map(
-                    (ingredient) => Chip(
-                      label: Text(ingredient),
-                      backgroundColor: Colors.white,
-                      side: BorderSide(color: Colors.grey[300]!),
-                      labelStyle: const TextStyle(
-                        color: Colors.black87,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
+                    (ingredient) {
+                      final hasExplanation = _getFilterExplanation(ingredient) != null;
+                      final isSelected = seciliFiltreAciklamasi != null && seciliFiltreAciklamasi == _getFilterExplanation(ingredient);
+                      
+                      return ActionChip(
+                        label: Text(ingredient),
+                        backgroundColor: isSelected ? Colors.blue[50] : Colors.white,
+                        side: BorderSide(color: isSelected ? Colors.blue[300]! : Colors.grey[300]!),
+                        labelStyle: TextStyle(
+                          color: isSelected ? Colors.blue[900] : Colors.black87,
+                          fontWeight: FontWeight.w600,
+                        ),
+                        onPressed: hasExplanation ? () {
+                          final exp = _getFilterExplanation(ingredient);
+                          setState(() {
+                            if (seciliFiltreAciklamasi == exp) {
+                              seciliFiltreAciklamasi = null;
+                            } else {
+                              seciliFiltreAciklamasi = exp;
+                            }
+                          });
+                        } : () {},
+                      );
+                    }
                   )
                   .toList(growable: false),
             ),
+            if (seciliFiltreAciklamasi != null) ...[
+              const SizedBox(height: 12),
+              AnimatedContainer(
+                duration: const Duration(milliseconds: 300),
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.blue[50],
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: Colors.blue[200]!),
+                ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Icon(Icons.lightbulb_outline, size: 20, color: Colors.blue[800]),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Text(
+                        seciliFiltreAciklamasi!,
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: Colors.blue[900],
+                          height: 1.4,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
             if (product.sources.isNotEmpty) ...[
               const SizedBox(height: 32),
               const Text(
