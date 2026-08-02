@@ -1117,15 +1117,17 @@ medicheck_ai_flutter/assets/IMAGE_SOURCES.md
 
 ### Ürün Ekran Görüntüleri
 
-<!-- ![Sprint 3 Ana Sayfa](./images/sprint3-home.png) -->
+![Sprint 3 Ana Sayfa](./images/sprint3-home.png) 
 
-<!-- ![Sprint 3 Ürün Detay](./images/sprint3-product-detail.png) -->
+![Sprint 3 Ürün Detay](./images/sprint3-product-detail.png) 
 
-<!-- ![Sprint 3 AI Asistan](./images/sprint3-ai-assistant.png) -->
+![Sprint 3 AI Asistan](./images/sprint3-ai-assistant.png) 
 
-<!-- ![Sprint 3 Ürün Karşılaştırma](./images/sprint3-comparison.png) -->
+![Sprint 3 Ürün Karşılaştırma](./images/sprint3-comparison.png) 
 
-<!-- ![Sprint 3 Swagger](./images/sprint3-swagger.png) -->
+![Sprint 3 Karşılaştırma AI Yorumu](./images/sprint3-comparison-2.png)
+
+![Sprint 3 Swagger](./images/sprint3-swagger.png) 
 
 ---
 
