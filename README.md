@@ -14,7 +14,7 @@
 | Seymen Budak | Developer |
 | Yusuf Emre Sucu | Developer |
 
-> Not: Takımımız aktif olarak 4 kişiyle iletişim halindedir. Bir ekip üyemize henüz ulaşılamamıştır. Ekip içi iletişim için WhatsApp grubu oluşturulmuştur.
+> Not: Sprint 1 ve Sprint 2 sürecinde ekip 4 aktif kişiyle ilerlemiştir. Sprint 3 sürecinde Irmak Gündüz ekipten ayrıldığı için final sprint 3 aktif ekip üyesiyle tamamlanmıştır.
 
 ---
 
@@ -1024,13 +1024,13 @@ Yusuf Emre Sucu, Sprint 3’ün başlangıcında veri ve backend için kullanıl
 - Sprint Review hazırlandı.
 - Sprint Retrospective hazırlandı.
 
-### Teslim Öncesinde Eklenecekler
+### Final Teslim Çıktıları
 
-- Sprint 3 Board ekran görüntüsü
-- Final uygulama ekran görüntüleri
-- Swagger ekran görüntüsü
-- En fazla 3 dakikalık final demo videosu
-- Demo videosunun README bağlantısı
+- Sprint 3 Board ekran görüntüsü README’ye eklendi.
+- Final uygulama ekran görüntüleri README’ye eklendi.
+- Swagger ekran görüntüsü README’ye eklendi.
+- En fazla 3 dakikalık final demo videosu hazırlandı.
+- Demo videosu README’ye eklendi.
 
 ### Final MVP Kapsamı Dışında Bırakılanlar
 
@@ -1045,9 +1045,7 @@ Yusuf Emre Sucu, Sprint 3’ün başlangıcında veri ve backend için kullanıl
 
 ### Sprint Board Görseli
 
-<!-- Sprint 3 Board ekran görüntüsü hazırlandıktan sonra aşağıdaki satır aktif hale getirilecektir. -->
-
-<!-- ![Sprint 3 Board](./images/sprint-board-3.png) -->
+![Sprint 3 Board](./images/sprint-board-3.png) 
 
 ---
 
@@ -1264,22 +1262,33 @@ python3 -m unittest discover -s backend/tests -v
 
 ## Final Demo Video Akışı
 
-1. Uygulama açılır.
-2. Tıbbi bilgilendirme ekranı gösterilir.
-3. Ana sayfadaki ürünler görüntülenir.
-4. Kullanıcı bir güneş kremi arar.
-5. Ürün detay ekranı açılır.
-6. Ürün bilgileri ve AI analiz kartı gösterilir.
-7. Kullanıcı ikinci bir güneş kremi seçer.
-8. Ürün karşılaştırma ekranı gösterilir.
-9. AI karşılaştırma yorumu gösterilir.
-10. Kullanıcı bir ilaç detayını açar.
-11. AI asistana ürün veya ilaç hakkında soru sorulur.
-12. Uygulamanın tıbbi tavsiye vermediği tekrar belirtilir.
+1. Uygulama ana sayfası üzerinden MediCheck AI tanıtılır.
+2. Projenin çözdüğü problem, hedef kullanıcı kitlesi ve uygulamanın tıbbi tavsiye vermediği açıklanır.
+3. Ana sayfadaki ürün kataloğu gösterilir.
+4. Kullanıcı arama alanı ve kategori filtreleriyle ürünleri inceleyebilir.
+5. Güneş kremi ve ilaç kategorileri arasında geçiş yapılır.
+6. Bir güneş kremi ürün detay ekranı açılır.
+7. Ürün detayında marka, açıklama, filtre tipi, cilt tipi, içerik ve uyarı bilgileri gösterilir.
+8. Ürün detayındaki AI analiz kartı gösterilir.
+9. AI analizinin kesin sağlık hükmü vermeden, bilgilendirme amaçlı özet sunduğu açıklanır.
+10. AI asistan ekranında ürün veya ilaç hakkında soru-cevap akışı gösterilir.
+11. Riskli sağlık sorularında doktor veya eczacıya danışılması gerektiği vurgulanır.
+12. İki güneş kreminin karşılaştırıldığı ürün karşılaştırma ekranı gösterilir.
+13. Karşılaştırma ekranında SPF, filtre tipi, cilt tipi, alkol/parfüm bilgisi ve dikkat notları gösterilir.
+14. AI karşılaştırma yorumunun ürünleri tarafsız şekilde özetlediği gösterilir.
+15. Bir ilaç detay ekranı açılır.
+16. İlaç detayında etken madde, kullanım özeti, yan etkiler ve uyarı bilgileri gösterilir.
+17. FastAPI Swagger ekranı üzerinden backend endpointleri gösterilir.
+18. Ürün, ilaç, AI analiz, AI asistan ve ürün karşılaştırma endpointleri açıklanır.
+19. Gemini API entegrasyonunun backend tarafında yönetildiği ve API anahtarının mobil uygulamaya eklenmediği belirtilir.
+20. PostgreSQL için veri şemasının hazırlandığı, canlı bağlantının final MVP kapsamı dışında bırakıldığı açıklanır.
+21. Uygulamanın genişletilmiş veri seti, yerel görseller, AI asistan, ürün karşılaştırma, FastAPI backend ve Gemini entegrasyonu ile çalışan final MVP haline geldiği belirtilerek video tamamlanır.
+
+
 
 ### Demo Videosu
 
-**Demo videosu:** Teslim öncesinde eklenecek.
+**Demo videosu:** [MediCheck AI Final Demo](https://www.youtube.com/watch?v=Aa9BRn8rvzs)
 
 ---
 
@@ -1337,7 +1346,6 @@ Sprint 3 sonunda MediCheck AI, final demo sırasında temel kullanıcı senaryol
 - Takım üyelerinin hazırladığı ilk çalışmaların final mimariye dönüştürülmesi ek entegrasyon gerektirdi.
 - Flutter, FastAPI ve Gemini katmanlarının birlikte geliştirilmesi teknik koordinasyon gerektirdi.
 - Canlı PostgreSQL bağlantısı final sprint süresi içinde tamamlanamadı.
-- Sprint Board ve final görselleri teknik geliştirmeden sonraya kaldı.
 
 ## Sprint 3 Sonucu
 
@@ -1348,7 +1356,5 @@ Sprint 3 teknik geliştirme çalışmalarının büyük bölümü Pelin Yaşar t
 Flutter uygulaması ve FastAPI backend testlerle doğrulanmış, web build başarıyla oluşturulmuş ve Gemini servisinin kullanılamadığı durumlarda sistemin güvenli fallback cevaplarıyla çalışmaya devam etmesi sağlanmıştır.
 
 Canlı PostgreSQL bağlantısı, kullanıcı hesapları, favoriler, QR, profil ve barkod/OCR özellikleri final MVP kapsamı dışında bırakılmıştır.
-
-Final teslim için Sprint Board görseli, uygulama ekran görüntüleri, Swagger ekran görüntüsü ve en fazla 3 dakikalık demo videosu README’ye eklenecektir.
 
 
